@@ -6,47 +6,38 @@
 #include <windows.h>
 
 #include "../headers/utility.h"
+#include "../headers/globals.h"
 
 namespace LoadingScreen {
-  #define WIDTH 115
-  #define HEIGHT 27
-
-  const short HORIZONTALPIECE = 205;
-  const short VERTICALPIECE = 186;
-  const short TOPLEFTPIECE = 201;
-  const short TOPRIGHTPIECE = 187;
-  const short BOTTOMLEFTPIECE = 200;
-  const short BOTTOMRIGHTPIECE = 188;
-
   void animateOuterBorder(short delay = 0) {
-    printf("%c", TOPLEFTPIECE); 
-    for (int i = 1; i <= WIDTH; i++){
+    printf("%c", Globals::TOPLEFTPIECE); 
+    for (int i = 1; i <= Globals::WIDTH; i++){
       Sleep(delay);
       Utility::setConsoleCursorPosition(i, 0);
-      printf("%c", HORIZONTALPIECE);
+      printf("%c", Globals::HORIZONTALPIECE);
     }
-    printf("%c", TOPRIGHTPIECE); 
+    printf("%c", Globals::TOPRIGHTPIECE); 
 
-    for (int i = 1; i <= HEIGHT; i++){
+    for (int i = 1; i <= Globals::HEIGHT; i++){
       Sleep(delay);
       Utility::setConsoleCursorPosition(0, i);
-      printf("%c", VERTICALPIECE);
-      Utility::setConsoleCursorPosition(WIDTH + 1, i);
-      printf("%c", VERTICALPIECE);
+      printf("%c", Globals::VERTICALPIECE);
+      Utility::setConsoleCursorPosition(Globals::WIDTH + 1, i);
+      printf("%c", Globals::VERTICALPIECE);
     }
 
-    Utility::setConsoleCursorPosition(0, HEIGHT);
-    printf("%c", BOTTOMLEFTPIECE);
-    Utility::setConsoleCursorPosition(WIDTH + 1, HEIGHT);
-    printf("%c", BOTTOMRIGHTPIECE);
-    Utility::setConsoleCursorPosition(WIDTH, HEIGHT);
-    printf("%c", HORIZONTALPIECE);
-    for (int i = 1; i <= WIDTH / 2 ; i++){
+    Utility::setConsoleCursorPosition(0, Globals::HEIGHT);
+    printf("%c", Globals::BOTTOMLEFTPIECE);
+    Utility::setConsoleCursorPosition(Globals::WIDTH + 1, Globals::HEIGHT);
+    printf("%c", Globals::BOTTOMRIGHTPIECE);
+    Utility::setConsoleCursorPosition(Globals::WIDTH, Globals::HEIGHT);
+    printf("%c", Globals::HORIZONTALPIECE);
+    for (int i = 1; i <= Globals::WIDTH / 2 ; i++){
       Sleep(delay);
-      Utility::setConsoleCursorPosition(i, HEIGHT);
-      printf("%c", HORIZONTALPIECE);
-      Utility::setConsoleCursorPosition(WIDTH - i, HEIGHT);
-      printf("%c", HORIZONTALPIECE);
+      Utility::setConsoleCursorPosition(i, Globals::HEIGHT);
+      printf("%c", Globals::HORIZONTALPIECE);
+      Utility::setConsoleCursorPosition(Globals::WIDTH - i, Globals::HEIGHT);
+      printf("%c", Globals::HORIZONTALPIECE);
     }
 
   }
@@ -60,16 +51,16 @@ namespace LoadingScreen {
       else if (progress <= 80) Utility::setConsoleTextColor("FOREGROUND_BLUE");
       else Utility::setConsoleTextColor("FOREGROUND_GREEN");
 
-      Utility::setConsoleCursorPosition(WIDTH / 2 - 5, HEIGHT / 2);
+      Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 5, Globals::HEIGHT / 2);
       printf("Loading %d%%", progress);
 
       progress += rand() % 3;
     }
 
-    Utility::setConsoleCursorPosition(WIDTH / 2 - 5, HEIGHT / 2);
+    Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 5, Globals::HEIGHT / 2);
     printf("Loading %d%%", progress = 100);
 
-    Utility::setConsoleCursorPosition(WIDTH / 2 - 15, HEIGHT / 2 + 1);
+    Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 15, Globals::HEIGHT / 2 + 1);
     Utility::animateString("Left Click Anywhere to Continue", 15);
   }
 

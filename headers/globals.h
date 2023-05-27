@@ -5,6 +5,16 @@
 
 namespace Globals {
   const HANDLE OUTPUTHANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
+
+  const short WIDTH = 115;
+  const short HEIGHT = 27;
+
+  const short HORIZONTALPIECE = 205;
+  const short VERTICALPIECE = 186;
+  const short TOPLEFTPIECE = 201;
+  const short TOPRIGHTPIECE = 187;
+  const short BOTTOMLEFTPIECE = 200;
+  const short BOTTOMRIGHTPIECE = 188;
 }
 
 #endif
