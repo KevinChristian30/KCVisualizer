@@ -4,6 +4,7 @@
 
 #include "headers/utility.h"
 #include "headers/loadingScreen.h"
+#include "headers/mainMenuScreen.h"
 
 void hideCursor() {
   HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -36,6 +37,6 @@ void initializeApp() {
 int main() {
   initializeApp();
 	LoadingScreen::show();
+  MainMenuScreen::show();
 	return 0;
 }
-

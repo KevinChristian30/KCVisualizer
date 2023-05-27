@@ -9,39 +9,6 @@
 #include "../headers/globals.h"
 
 namespace LoadingScreen {
-  void animateOuterBorder(short delay = 0) {
-    printf("%c", Globals::TOPLEFTPIECE); 
-    for (int i = 1; i <= Globals::WIDTH; i++){
-      Sleep(delay);
-      Utility::setConsoleCursorPosition(i, 0);
-      printf("%c", Globals::HORIZONTALPIECE);
-    }
-    printf("%c", Globals::TOPRIGHTPIECE); 
-
-    for (int i = 1; i <= Globals::HEIGHT; i++){
-      Sleep(delay);
-      Utility::setConsoleCursorPosition(0, i);
-      printf("%c", Globals::VERTICALPIECE);
-      Utility::setConsoleCursorPosition(Globals::WIDTH + 1, i);
-      printf("%c", Globals::VERTICALPIECE);
-    }
-
-    Utility::setConsoleCursorPosition(0, Globals::HEIGHT);
-    printf("%c", Globals::BOTTOMLEFTPIECE);
-    Utility::setConsoleCursorPosition(Globals::WIDTH + 1, Globals::HEIGHT);
-    printf("%c", Globals::BOTTOMRIGHTPIECE);
-    Utility::setConsoleCursorPosition(Globals::WIDTH, Globals::HEIGHT);
-    printf("%c", Globals::HORIZONTALPIECE);
-    for (int i = 1; i <= Globals::WIDTH / 2 ; i++){
-      Sleep(delay);
-      Utility::setConsoleCursorPosition(i, Globals::HEIGHT);
-      printf("%c", Globals::HORIZONTALPIECE);
-      Utility::setConsoleCursorPosition(Globals::WIDTH - i, Globals::HEIGHT);
-      printf("%c", Globals::HORIZONTALPIECE);
-    }
-
-  }
-
   void animateLoadingBar(short delay = 0) {
     short progress = 0;
     while (progress < 100) {
@@ -70,9 +37,10 @@ namespace LoadingScreen {
   }
 
   void show() {
-    animateOuterBorder(1);
+    Utility::UI::animateOuterBorder(1);
     animateLoadingBar(20);
     waitForLeftClick();
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
   }
 }
 
