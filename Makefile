@@ -1,10 +1,13 @@
 CXX=g++
 
-output: utility.o index.o loadingScreen.o mainMenuScreen.o
-	$(CXX) utility.o index.o loadingScreen.o mainMenuScreen.o -o KCVisualizer
+output: utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o
+	$(CXX) utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o -o KCVisualizer
 
 utility.o: sources/utility.cpp 
 	$(CXX) -c sources/utility.cpp 
+
+userInterface.o: sources/userInterface.cpp
+	$(CXX) -c sources/userInterface.cpp
 
 index.o: index.cpp
 	$(CXX) -c index.cpp

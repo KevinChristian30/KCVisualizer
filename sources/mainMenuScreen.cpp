@@ -2,10 +2,12 @@
 #define MAIN_MENU_SCREEN_CPP
 
 #include <stdio.h>
+#include <string.h>
 #include <windows.h>
 
 #include "../headers/utility.h"
 #include "../headers/globals.h"
+#include "../headers/userInterface.h"
 
 namespace MainMenuScreen {
   const char* LOGO[] = {
@@ -16,6 +18,32 @@ namespace MainMenuScreen {
     "| . \\ |____   \\  /  | \\__ \\ |_| | (_| | | |/ /  __/ |  ",
     "|_|\\_\\_____|   \\/   |_|___/\\__,_|\\__,_|_|_/___\\___|_|"
   };
+
+  UserInterface::Button btnTSP;
+  UserInterface::Button btnSorting;
+  UserInterface::Button btnMazeSolving;
+  UserInterface::Button btnSandBox;
+  UserInterface::Button btnExit;
+
+  void initializeUIElements() {
+    const short X = 5;
+    const short Y = 20;
+    
+    btnTSP.position = { X, Y };
+    strncpy(btnTSP.text, "TSP", 20);
+
+    btnSorting.position = { X + (22 * 1), Y };
+    strncpy(btnSorting.text, "Sorting", 20);
+
+    btnMazeSolving.position = { X + (22 * 2), Y };
+    strncpy(btnMazeSolving.text, "Maze Solving", 20);
+
+    btnSandBox.position = { X + (22 * 3), Y };
+    strncpy(btnSandBox.text, "SandBox", 20);
+
+    btnExit.position = { X + (22 * 4), Y };
+    strncpy(btnExit.text, "Exit", 20);
+  }
 
   void animateTitle(short delay = 0) {
     const short X = 30;
@@ -76,27 +104,19 @@ namespace MainMenuScreen {
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
   }
 
-  void displayMenuOptions() {
-    const short X = 54;
+  void displayUIElements() {
+    Utility::UI::animateOuterBorder(0);
+    animateTitle(5);
 
-    Utility::setConsoleCursorPosition(X, 15);
-    printf("Sorting");
-
-    Utility::setConsoleCursorPosition(X, 17);
-    printf("Maze Solving");
-
-    Utility::setConsoleCursorPosition(X, 19);
-    printf("Field Pathfinding");
-
-    Utility::setConsoleCursorPosition(X, 21);
-    printf("Exit");
+    UserInterface::renderButton(btnTSP);
+    
   }
 
   void show() {
     Utility::clearScreen();
-    Utility::UI::animateOuterBorder(0);
-    animateTitle(5);
-    displayMenuOptions();
+
+    initializeUIElements();
+    displayUIElements();
 
     while (true) {}
   }
