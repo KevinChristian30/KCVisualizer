@@ -32,19 +32,23 @@ namespace MainMenuScreen {
     const short GAP = 6;
     
     btnTSP.position = { X, Y };
+    btnTSP.pixelPosition = { 60, 300, 390, 450 };
     strncpy(btnTSP.text, "TSP", 20);
 
     btnSorting.position = { X + (22 * 1) + (GAP * 1), Y };
+    btnSorting.pixelPosition = { 380, 620, 390, 450 };
     strncpy(btnSorting.text, "Sorting", 20);
 
     btnMazeSolving.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
+    btnMazeSolving.pixelPosition = { 700, 940, 390, 450 };
     strncpy(btnMazeSolving.text, "Maze Solving", 20);
 
     btnSandBox.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
+    btnSandBox.pixelPosition = { 990, 1230, 390, 450 };
     strncpy(btnSandBox.text, "SandBox", 20);
 
     btnExit.position = { X + (22 * 2) - 2, Y + 6};
-    btnExit.pixelPosition = { 521, 755, 536, 589 };
+    btnExit.pixelPosition = { 520, 760, 536, 589 };
     strncpy(btnExit.text, "Exit", 20);
   }
 
@@ -119,11 +123,23 @@ namespace MainMenuScreen {
   }
 
   void handleClick(POINT cursorPosition) {
-    // Collide with Every Button
-    // Utility::setConsoleCursorPosition(1, 1);
-    // printf("X: %d, Y:%d", cursorPosition.x, cursorPosition.y);
+    Utility::setConsoleCursorPosition(0, 0);
+    printf("%d %d", cursorPosition.x, cursorPosition.y);
 
-    if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
+    if (UserInterface::isPointerInButtonPixelPosition(btnTSP, cursorPosition)){
+      Utility::setConsoleCursorPosition(0, 1);
+      printf("TSP Button Click");
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnSorting, cursorPosition)){
+      Utility::setConsoleCursorPosition(0, 1);
+      printf("Sorting Button Click");
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnMazeSolving, cursorPosition)){
+      Utility::setConsoleCursorPosition(0, 1);
+      printf("Maze Solving Button Click");
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnSandBox, cursorPosition)){
+      Utility::setConsoleCursorPosition(0, 1);
+      printf("Sandbox Button Click");
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
+      Utility::setConsoleCursorPosition(0, 1);
       ExitScreen::show();
     }
   }

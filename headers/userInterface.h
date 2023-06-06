@@ -15,8 +15,8 @@ namespace UserInterface {
   */
   struct PixelPosition {
     short minX;
-    short minY;
     short maxX;
+    short minY;
     short maxY;
   };
 
