@@ -113,6 +113,64 @@ namespace SortingScreen {
     }
   }
 
+  namespace MergeSort{
+    void merge(Bar::Bar* bars, int leftIndex, int middleIndex, int rightIndex){
+      int leftArraySize = middleIndex - leftIndex + 1, rightArraySize = rightIndex - middleIndex;
+
+      Bar::Bar* leftArray = (Bar::Bar*) malloc(leftArraySize * sizeof(Bar::Bar));
+      for (int i = 0; i < leftArraySize; i++) leftArray[i] = bars[leftIndex + i];
+
+      Bar::Bar* rightArray = (Bar::Bar*) malloc(rightArraySize * sizeof(Bar::Bar));
+      for (int i = 0; i < rightArraySize; i++) rightArray[i] = bars[middleIndex + 1 + i];
+
+      int leftArrayPointer, rightArrayPointer, mainArrayPointer = leftIndex;
+      leftArrayPointer = rightArrayPointer = 0;
+
+      Utility::setConsoleTextColor("FOREGROUND_BLUE");
+
+      while (leftArrayPointer < leftArraySize && rightArrayPointer < rightArraySize){
+        bars[mainArrayPointer++].height = 
+          leftArray[leftArrayPointer].height < rightArray[rightArrayPointer].height ?  
+            leftArray[leftArrayPointer++].height : rightArray[rightArrayPointer++].height;
+
+        Bar::clearBar(bars[mainArrayPointer - 1]);
+        Bar::renderBar(bars[mainArrayPointer - 1]);
+        Sleep(10);
+      }
+
+      while (leftArrayPointer < leftArraySize) {
+        bars[mainArrayPointer++].height = leftArray[leftArrayPointer++].height;
+        Bar::clearBar(bars[mainArrayPointer - 1]);
+        Bar::renderBar(bars[mainArrayPointer - 1]);
+        Sleep(10);
+      }
+
+      while (rightArrayPointer < rightArraySize) {
+        bars[mainArrayPointer++].height = rightArray[rightArrayPointer++].height;
+        Bar::clearBar(bars[mainArrayPointer - 1]);
+        Bar::renderBar(bars[mainArrayPointer - 1]);
+        Sleep(10);
+      }
+
+      Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    }
+
+    void mergeSort(Bar::Bar* bars, int leftIndex = 4, int rightIndex = 112){
+      if (leftIndex < rightIndex){
+        int middleIndex = (leftIndex + rightIndex) / 2;
+        mergeSort(bars, leftIndex, middleIndex);
+        mergeSort(bars, middleIndex + 1, rightIndex);
+
+        for (short int i = leftIndex; i <= rightIndex; i++) {
+          clearBar(bars[i]);
+          Sleep(5);
+        }
+
+        merge(bars, leftIndex, middleIndex, rightIndex);
+      }
+    }
+  }
+
   UserInterface::Button btnQuickSort;
   UserInterface::Button btnMergeSort;
   UserInterface::Button btnHeapSort;
@@ -160,8 +218,8 @@ namespace SortingScreen {
       QuickSort::quickSort(bars);
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Merge Sort");
+      MergeSort::mergeSort(bars);
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnHeapSort, cursorPosition)){
       Utility::setConsoleCursorPosition(0, 1);
       printf("Heap Sort");
