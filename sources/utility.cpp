@@ -77,6 +77,45 @@ namespace Utility {
         printf("%c", Globals::HORIZONTALPIECE);
       }
     }
+  
+    void animateInnerBorder(short delay) {
+      setConsoleCursorPosition(2, 1);
+      printf("%c", Globals::TOPLEFTPIECE);
+
+      for (size_t i = 3; i < 114; i++){
+        Sleep(delay);
+        setConsoleCursorPosition(i, 1);
+        printf("%c", Globals::HORIZONTALPIECE);
+      }
+
+      Sleep(delay);
+      setConsoleCursorPosition(114, 1);
+      printf("%c", Globals::TOPRIGHTPIECE);
+
+      for (size_t i = 0; i < 22; i++){
+        Sleep(delay);
+        setConsoleCursorPosition(2, 2 + i);
+        printf("%c", Globals::VERTICALPIECE);
+
+        Sleep(delay);
+        setConsoleCursorPosition(114, 2 + i);
+        printf("%c", Globals::VERTICALPIECE);
+      }
+
+      Sleep(delay);
+      setConsoleCursorPosition(2, 23);
+      printf("%c", Globals::BOTTOMLEFTPIECE);
+
+      Sleep(delay);
+      setConsoleCursorPosition(114, 23);
+      printf("%c", Globals::BOTTOMRIGHTPIECE);
+
+      for (size_t i = 3; i < 114; i++){
+        Sleep(delay);
+        setConsoleCursorPosition(i, 23);
+        printf("%c", Globals::HORIZONTALPIECE);
+      }
+    }
   }
 }
 

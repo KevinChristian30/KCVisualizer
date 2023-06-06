@@ -9,6 +9,10 @@
 #include "../headers/globals.h"
 #include "../headers/userInterface.h"
 #include "../headers/exitScreen.h"
+#include "../headers/tspScreen.h"
+#include "../headers/sortingScreen.h"
+#include "../headers/mazeSolvingScreen.h"
+#include "../headers/sandboxScreen.h"
 
 namespace MainMenuScreen {
   const char* LOGO[] = {
@@ -123,23 +127,15 @@ namespace MainMenuScreen {
   }
 
   void handleClick(POINT cursorPosition) {
-    Utility::setConsoleCursorPosition(0, 0);
-    printf("%d %d", cursorPosition.x, cursorPosition.y);
-
     if (UserInterface::isPointerInButtonPixelPosition(btnTSP, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("TSP Button Click");
+      TSPScreen::show();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnSorting, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Sorting Button Click");
+      SortingScreen::show();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMazeSolving, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Maze Solving Button Click");
+      MazeSolvingScreen::show();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnSandBox, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Sandbox Button Click");
+      SandboxScreen::show();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
       ExitScreen::show();
     }
   }
@@ -148,23 +144,23 @@ namespace MainMenuScreen {
     POINT cursorPosition;
 	  HWND hWnd = GetForegroundWindow();
 
-    while (true) {
-      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-        GetCursorPos(&cursorPosition);
-        ScreenToClient(hWnd, &cursorPosition);
-      
-        handleClick(cursorPosition);
-      }
-    }
+    while (true) if (GetAsyncKeyState(VK_LBUTTON) & 1) break;
+
+    GetCursorPos(&cursorPosition);
+    ScreenToClient(hWnd, &cursorPosition);
+  
+    handleClick(cursorPosition);
   }
 
   void show() {
-    Utility::clearScreen();
-
     initializeUIElements();
-    displayUIElements();
 
-    setEventHandlers();
+    while (true) {
+      Utility::clearScreen();
+      displayUIElements();
+      
+      setEventHandlers();
+    }
   }
 }
 

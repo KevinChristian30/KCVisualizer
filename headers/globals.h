@@ -15,6 +15,8 @@ namespace Globals {
   const short TOPRIGHTPIECE = 187;
   const short BOTTOMLEFTPIECE = 200;
   const short BOTTOMRIGHTPIECE = 188;
+
+  const short BLOCK = 219;
 }
 
 #endif

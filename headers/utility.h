@@ -9,6 +9,8 @@ namespace Utility {
 
   namespace UI {
     void animateOuterBorder(short delay);
+
+    void animateInnerBorder(short delay);
   }
 }
 
