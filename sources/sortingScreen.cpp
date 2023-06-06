@@ -9,6 +9,28 @@
 #include "../headers/globals.h"
 
 namespace SortingScreen {
+  int numberOfBarsSorted;
+
+  double getProgressPercentage() {
+    double percentage = (numberOfBarsSorted / 109.0) * 100;
+    if (percentage > 100) percentage = 100;
+
+    return percentage;
+  }
+
+  void displaySortingStatistics() {
+    const short X = 22;
+    const short Y = 25;
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
+    Utility::setConsoleCursorPosition(X, Y);
+    printf("Bars Sorted: %d/%d", numberOfBarsSorted, 109);
+
+    Utility::setConsoleCursorPosition(X + 50, Y);
+    printf("Bars Sorted: %.1f%%", getProgressPercentage());
+  }
+
   namespace Bar {
     struct Bar {
       int xPos;
@@ -34,11 +56,10 @@ namespace SortingScreen {
       return bars;
     }
   
-    void animateRandomizedBars(Bar* bars){
+    void animateRandomizedBars(Bar* bars) {
       for (auto i = 4; i < 113; i++){
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
-        // renderBar(bars[i], 1);
-        renderBar(bars[i]);
+        renderBar(bars[i], 1);
       }
       
       for (auto i = 4; i < 113; i++){
@@ -53,14 +74,14 @@ namespace SortingScreen {
       }
     }
   
-    void clearBar(Bar bar){
+    void clearBar(Bar bar) {
       for (auto i = 0; i < 19; i++){
         Utility::setConsoleCursorPosition(bar.xPos, bar.yPos - i);
         printf(" ");
       }
     }
 
-    void swapHeight(Bar* a, Bar* b){
+    void swapHeight(Bar* a, Bar* b) { 
       int temp = a->height;
       a->height = b->height;
       b->height = temp;
@@ -92,6 +113,9 @@ namespace SortingScreen {
       swapHeight(&bars[rightIndex], &bars[++j]);
       clearBar(bars[rightIndex]);
       clearBar(bars[j]);
+
+      numberOfBarsSorted++;
+      displaySortingStatistics();
 
       Bar::renderBar(bars[rightIndex]);
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
@@ -133,6 +157,12 @@ namespace SortingScreen {
           leftArray[leftArrayPointer].height < rightArray[rightArrayPointer].height ?  
             leftArray[leftArrayPointer++].height : rightArray[rightArrayPointer++].height;
 
+        if (leftIndex == 4 && rightIndex == 112) {
+          numberOfBarsSorted++;
+          displaySortingStatistics();
+        }
+
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
         Bar::clearBar(bars[mainArrayPointer - 1]);
         Bar::renderBar(bars[mainArrayPointer - 1]);
         Sleep(10);
@@ -140,15 +170,29 @@ namespace SortingScreen {
 
       while (leftArrayPointer < leftArraySize) {
         bars[mainArrayPointer++].height = leftArray[leftArrayPointer++].height;
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
         Bar::clearBar(bars[mainArrayPointer - 1]);
         Bar::renderBar(bars[mainArrayPointer - 1]);
+        
+        if (leftIndex == 4 && rightIndex == 112) {
+          numberOfBarsSorted++;
+          displaySortingStatistics();
+        }
+        
         Sleep(10);
       }
 
       while (rightArrayPointer < rightArraySize) {
         bars[mainArrayPointer++].height = rightArray[rightArrayPointer++].height;
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
         Bar::clearBar(bars[mainArrayPointer - 1]);
         Bar::renderBar(bars[mainArrayPointer - 1]);
+        
+        if (leftIndex == 4 && rightIndex == 112) {
+          numberOfBarsSorted++;
+          displaySortingStatistics();
+        }
+        
         Sleep(10);
       }
 
@@ -223,6 +267,9 @@ namespace SortingScreen {
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
         Bar::renderBar(bars[i]);
 
+        numberOfBarsSorted++;
+        displaySortingStatistics();
+
         Sleep(10);
 
         heapify(bars, i, 0);
@@ -257,13 +304,15 @@ namespace SortingScreen {
     btnBack.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
     btnBack.pixelPosition = { 990, 1230, 580, 640 };
     strncpy(btnBack.text, "Back", 20);
+
+    bars = Bar::getRandomizedBars();
+    numberOfBarsSorted = 0;
   }
 
   void displayUIElements() {
     Utility::UI::animateOuterBorder(0);
     Utility::UI::animateInnerBorder(0);
 
-    bars = Bar::getRandomizedBars();
     Bar::animateRandomizedBars(bars);
 
     UserInterface::renderButton(btnQuickSort);
@@ -272,23 +321,59 @@ namespace SortingScreen {
     UserInterface::renderButton(btnBack);
   }
 
+  void clearButtons() {
+    const short Y = 25;
+
+    for (short i = 1; i < Globals::WIDTH - 1; i++) {
+      Utility::setConsoleCursorPosition(i, Y - 1);
+      printf(" ");
+      Utility::setConsoleCursorPosition(i, Y);
+      printf(" ");
+      Utility::setConsoleCursorPosition(i, Y + 1);
+      printf(" ");
+    }
+  }
+
+  void animateBarsSorted(Bar::Bar *bars, short startIndex = 4, short endIndex = 112) {
+    Utility::setConsoleTextColor("FOREGROUND_GREEN");
+    
+    for (short i = startIndex; i <= endIndex; i++) {
+      Bar::renderBar(bars[i]);
+      Sleep(5);
+    }
+  }
+
   bool handleClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnQuickSort, cursorPosition)){
+      clearButtons();
+      displaySortingStatistics();
+
       QuickSort::quickSort(bars);
+      animateBarsSorted(bars);
+
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
+      clearButtons();
+      displaySortingStatistics();
+
       MergeSort::mergeSort(bars);
+      animateBarsSorted(bars);
+      
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnHeapSort, cursorPosition)){
-      Bar::Bar *newBars = (Bar::Bar*) malloc(120 * sizeof(Bar::Bar));
+      Bar::Bar *toSort = (Bar::Bar*) malloc(120 * sizeof(Bar::Bar));
       for (size_t i = 4; i < 113; i++){
-        newBars[i - 4].xPos = bars[i].xPos;
-        newBars[i - 4].yPos = bars[i].yPos;
-        newBars[i - 4].height = bars[i].height;
+        toSort[i - 4].xPos = bars[i].xPos;
+        toSort[i - 4].yPos = bars[i].yPos;
+        toSort[i - 4].height = bars[i].height;
       }
 
-      HeapSort::heapSort(newBars, 109);
-      while (true);
+      clearButtons();
+      displaySortingStatistics();
+
+      HeapSort::heapSort(toSort, 109);
+      animateBarsSorted(toSort, 0, 109);
+
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)){
       return false;
