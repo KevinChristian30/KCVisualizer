@@ -51,12 +51,74 @@ namespace SortingScreen {
         renderBar(bars[i]);
       }
     }
+  
+    void clearBar(Bar bar){
+      for (auto i = 0; i < 19; i++){
+        Utility::setConsoleCursorPosition(bar.xPos, bar.yPos - i);
+        printf(" ");
+      }
+    }
+
+    void swapHeight(Bar* a, Bar* b){
+      int temp = a->height;
+      a->height = b->height;
+      b->height = temp;
+    }
   };
+
+  namespace QuickSort {
+    int partition(Bar::Bar* bars, int leftIndex, int rightIndex){
+
+      int j = leftIndex - 1;
+      for (int i = leftIndex; i < rightIndex; i++){
+        Utility::setConsoleTextColor("FOREGROUND_RED");
+        Bar::renderBar(bars[i]);
+        Sleep(10);
+
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+        Bar::renderBar(bars[i]);
+
+        if (bars[i].height < bars[rightIndex].height){
+          swapHeight(&bars[i], &bars[++j]);
+          Bar::clearBar(bars[i]);
+          Bar::clearBar(bars[j]);
+
+          Bar::renderBar(bars[i]);
+          Bar::renderBar(bars[j]);
+          Sleep(10);
+        }
+      }
+      
+      swapHeight(&bars[rightIndex], &bars[++j]);
+      clearBar(bars[rightIndex]);
+      clearBar(bars[j]);
+
+      Bar::renderBar(bars[rightIndex]);
+      Utility::setConsoleTextColor("FOREGROUND_BLUE");
+      Bar::renderBar(bars[j]);
+      Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
+      Sleep(10);
+
+      return j;
+    }
+
+    void quickSort(Bar::Bar* bars, int leftIndex = 4, int rightIndex = 112){
+      if (leftIndex <= rightIndex){
+        int midIndex = partition(bars, leftIndex, rightIndex);
+
+        quickSort(bars, leftIndex, midIndex - 1);
+        quickSort(bars, midIndex + 1, rightIndex);
+      }
+    }
+  }
 
   UserInterface::Button btnQuickSort;
   UserInterface::Button btnMergeSort;
   UserInterface::Button btnHeapSort;
   UserInterface::Button btnBack;
+
+  Bar::Bar *bars;
 
   void initializeUIElements() {
     const short X = 5;
@@ -84,7 +146,7 @@ namespace SortingScreen {
     Utility::UI::animateOuterBorder(0);
     Utility::UI::animateInnerBorder(0);
 
-    Bar::Bar *bars = Bar::getRandomizedBars();
+    bars = Bar::getRandomizedBars();
     Bar::animateRandomizedBars(bars);
 
     UserInterface::renderButton(btnQuickSort);
@@ -94,12 +156,9 @@ namespace SortingScreen {
   }
 
   bool handleClick(POINT cursorPosition) {
-    Utility::setConsoleCursorPosition(0, 0);
-    printf("%d %d", cursorPosition.x, cursorPosition.y);
-
     if (UserInterface::isPointerInButtonPixelPosition(btnQuickSort, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Quick Sort");
+      QuickSort::quickSort(bars);
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
       Utility::setConsoleCursorPosition(0, 1);
       printf("Merge Sort");
