@@ -1,7 +1,7 @@
 CXX=g++
 
-output: utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o
-	$(CXX) utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o -o KCVisualizer
+output: utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o
+	$(CXX) utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o -o KCVisualizer
 
 utility.o: sources/utility.cpp 
 	$(CXX) -c sources/utility.cpp 
@@ -17,6 +17,9 @@ loadingScreen.o: sources/loadingScreen.cpp
 
 mainMenuScreen.o: sources/mainMenuScreen.cpp 
 	$(CXX) -c sources/mainMenuScreen.cpp 
+
+exitScreen.o: sources/exitScreen.cpp
+	$(CXX) -c sources/exitScreen.cpp
 
 clean:
 	del *.o KCVisualizer.exe

@@ -16,8 +16,19 @@ namespace UserInterface {
     short y;
   };
 
+  /**
+   * Position of a Button in pixels, used to detect mouse click
+  */
+  struct PixelPosition {
+    short minX;
+    short maxX;
+    short minY;
+    short maxY;
+  };
+
   struct Button {
     Position position;
+    PixelPosition pixelPosition;
     char text[21];
   };
 
@@ -50,6 +61,14 @@ namespace UserInterface {
     Utility::setConsoleCursorPosition(button.position.x + 21, button.position.y + 2);
     printf("%c", Globals::BOTTOMRIGHTPIECE);
   };
+
+ bool isPointerInButtonPixelPosition(Button button, POINT cursorPosition) {
+    return 
+      cursorPosition.x >= button.pixelPosition.minX && 
+      cursorPosition.x <= button.pixelPosition.maxX &&
+      cursorPosition.y >= button.pixelPosition.minY &&
+      cursorPosition.y <= button.pixelPosition.maxY;
+  }
 }
 
 #endif

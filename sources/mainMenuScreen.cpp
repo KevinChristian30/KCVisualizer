@@ -8,6 +8,7 @@
 #include "../headers/utility.h"
 #include "../headers/globals.h"
 #include "../headers/userInterface.h"
+#include "../headers/exitScreen.h"
 
 namespace MainMenuScreen {
   const char* LOGO[] = {
@@ -27,21 +28,23 @@ namespace MainMenuScreen {
 
   void initializeUIElements() {
     const short X = 5;
-    const short Y = 20;
+    const short Y = 16;
+    const short GAP = 6;
     
     btnTSP.position = { X, Y };
     strncpy(btnTSP.text, "TSP", 20);
 
-    btnSorting.position = { X + (22 * 1), Y };
+    btnSorting.position = { X + (22 * 1) + (GAP * 1), Y };
     strncpy(btnSorting.text, "Sorting", 20);
 
-    btnMazeSolving.position = { X + (22 * 2), Y };
+    btnMazeSolving.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
     strncpy(btnMazeSolving.text, "Maze Solving", 20);
 
-    btnSandBox.position = { X + (22 * 3), Y };
+    btnSandBox.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
     strncpy(btnSandBox.text, "SandBox", 20);
 
-    btnExit.position = { X + (22 * 4), Y };
+    btnExit.position = { X + (22 * 2) - 2, Y + 6};
+    btnExit.pixelPosition = { 521, 755, 536, 589 };
     strncpy(btnExit.text, "Exit", 20);
   }
 
@@ -109,7 +112,34 @@ namespace MainMenuScreen {
     animateTitle(5);
 
     UserInterface::renderButton(btnTSP);
-    
+    UserInterface::renderButton(btnSorting);
+    UserInterface::renderButton(btnMazeSolving);
+    UserInterface::renderButton(btnSandBox);
+    UserInterface::renderButton(btnExit);
+  }
+
+  void handleClick(POINT cursorPosition) {
+    // Collide with Every Button
+    // Utility::setConsoleCursorPosition(1, 1);
+    // printf("X: %d, Y:%d", cursorPosition.x, cursorPosition.y);
+
+    if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
+      ExitScreen::show();
+    }
+  }
+
+  void setEventHandlers() {
+    POINT cursorPosition;
+	  HWND hWnd = GetForegroundWindow();
+
+    while (true) {
+      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
+        GetCursorPos(&cursorPosition);
+        ScreenToClient(hWnd, &cursorPosition);
+      
+        handleClick(cursorPosition);
+      }
+    }
   }
 
   void show() {
@@ -118,7 +148,7 @@ namespace MainMenuScreen {
     initializeUIElements();
     displayUIElements();
 
-    while (true) {}
+    setEventHandlers();
   }
 }
 

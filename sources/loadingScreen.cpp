@@ -32,8 +32,7 @@ namespace LoadingScreen {
   }
 
   void waitForLeftClick() {
-    while(true) 
-      if(GetAsyncKeyState(VK_LBUTTON) & 1) break;
+    while (true) if (GetAsyncKeyState(VK_LBUTTON) & 1) break;
   }
 
   void show() {
