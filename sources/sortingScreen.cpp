@@ -37,7 +37,8 @@ namespace SortingScreen {
     void animateRandomizedBars(Bar* bars){
       for (auto i = 4; i < 113; i++){
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
-        renderBar(bars[i], 1);
+        // renderBar(bars[i], 1);
+        renderBar(bars[i]);
       }
       
       for (auto i = 4; i < 113; i++){
@@ -67,10 +68,9 @@ namespace SortingScreen {
   };
 
   namespace QuickSort {
-    int partition(Bar::Bar* bars, int leftIndex, int rightIndex){
-
+    int partition(Bar::Bar* bars, int leftIndex, int rightIndex) {
       int j = leftIndex - 1;
-      for (int i = leftIndex; i < rightIndex; i++){
+      for (int i = leftIndex; i < rightIndex; i++) {
         Utility::setConsoleTextColor("FOREGROUND_RED");
         Bar::renderBar(bars[i]);
         Sleep(10);
@@ -78,7 +78,7 @@ namespace SortingScreen {
         Utility::setConsoleTextColor("FOREGROUND_WHITE");
         Bar::renderBar(bars[i]);
 
-        if (bars[i].height < bars[rightIndex].height){
+        if (bars[i].height < bars[rightIndex].height) {
           swapHeight(&bars[i], &bars[++j]);
           Bar::clearBar(bars[i]);
           Bar::clearBar(bars[j]);
@@ -113,7 +113,7 @@ namespace SortingScreen {
     }
   }
 
-  namespace MergeSort{
+  namespace MergeSort {
     void merge(Bar::Bar* bars, int leftIndex, int middleIndex, int rightIndex){
       int leftArraySize = middleIndex - leftIndex + 1, rightArraySize = rightIndex - middleIndex;
 
@@ -171,6 +171,65 @@ namespace SortingScreen {
     }
   }
 
+  namespace HeapSort {
+    void heapify(Bar::Bar *bars, int N, int i) {
+      int largest = i;
+      int left = 2 * i + 1;
+      int right = 2 * i + 2;
+
+      if (left < N && bars[left].height > bars[largest].height) largest = left;
+      if (right < N && bars[right].height > bars[largest].height) largest = right;
+
+      if (largest != i) {
+        Utility::setConsoleTextColor("FOREGROUND_GREEN");
+        Bar::renderBar(bars[largest]);
+
+        Utility::setConsoleTextColor("FOREGROUND_RED");
+        Bar::renderBar(bars[i]);
+
+        Bar::clearBar(bars[i]);
+        Bar::clearBar(bars[largest]);
+        Bar::swapHeight(&bars[i], &bars[largest]);
+
+        Utility::setConsoleTextColor("FOREGROUND_GREEN");
+        Bar::renderBar(bars[largest]);
+        Bar::renderBar(bars[i]);
+
+        Sleep(10);
+
+        heapify(bars, N, largest);
+      }
+    }
+
+    void heapSort(Bar::Bar *bars, int N) {
+      for (int i = N / 2 - 1; i >= 0; i--) heapify(bars, N, i);
+
+      for (int i = 0; i < 109; i++) {
+        Bar::clearBar(bars[i]);
+        Utility::setConsoleTextColor("FOREGROUND_GREEN");
+        Bar::renderBar(bars[i]);
+        Sleep(1);
+      }
+
+      for (int i = N - 1; i >= 0; i--) {
+        Bar::clearBar(bars[0]);
+        Bar::clearBar(bars[i]);
+        
+        Bar::swapHeight(&bars[0], &bars[i]);
+
+        Utility::setConsoleTextColor("FOREGROUND_RED");
+        Bar::renderBar(bars[0]);
+
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
+        Bar::renderBar(bars[i]);
+
+        Sleep(10);
+
+        heapify(bars, i, 0);
+      }
+    }
+  }
+
   UserInterface::Button btnQuickSort;
   UserInterface::Button btnMergeSort;
   UserInterface::Button btnHeapSort;
@@ -221,8 +280,16 @@ namespace SortingScreen {
       MergeSort::mergeSort(bars);
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnHeapSort, cursorPosition)){
-      Utility::setConsoleCursorPosition(0, 1);
-      printf("Heap Sort");
+      Bar::Bar *newBars = (Bar::Bar*) malloc(120 * sizeof(Bar::Bar));
+      for (size_t i = 4; i < 113; i++){
+        newBars[i - 4].xPos = bars[i].xPos;
+        newBars[i - 4].yPos = bars[i].yPos;
+        newBars[i - 4].height = bars[i].height;
+      }
+
+      HeapSort::heapSort(newBars, 109);
+      while (true);
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)){
       return false;
     }
