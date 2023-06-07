@@ -126,21 +126,34 @@ namespace MainMenuScreen {
     UserInterface::renderButton(btnExit);
   }
 
-  void handleClick(POINT cursorPosition) {
+  /**
+   * Returns wether a button is pressed
+  */
+  bool handleClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnTSP, cursorPosition)){
       TSPScreen::show();
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnSorting, cursorPosition)){
       SortingScreen::show();
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMazeSolving, cursorPosition)){
       MazeSolvingScreen::show();
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnSandBox, cursorPosition)){
       SandboxScreen::show();
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
       ExitScreen::show();
+      return true;
     }
+
+    return false;
   }
 
-  void setEventHandlers() {
+  /**
+   * Returns wether a button is pressed
+  */
+  bool setEventHandlers() {
     POINT cursorPosition;
 	  HWND hWnd = GetForegroundWindow();
 
@@ -149,17 +162,20 @@ namespace MainMenuScreen {
     GetCursorPos(&cursorPosition);
     ScreenToClient(hWnd, &cursorPosition);
   
-    handleClick(cursorPosition);
+    return handleClick(cursorPosition);
   }
 
   void show() {
+    Utility::clearScreen();
     initializeUIElements();
 
     while (true) {
-      Utility::clearScreen();
       displayUIElements();
       
-      setEventHandlers();
+      if (setEventHandlers()) {
+        Utility::clearScreen();
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+      }
     }
   }
 }
