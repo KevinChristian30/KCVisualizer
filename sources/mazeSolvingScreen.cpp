@@ -20,6 +20,19 @@ namespace MazeSolvingScreen {
   const short dirX[] = {0, 1, 0, -1};
   const short dirY[] = {-1, 0, 1, 0};
 
+  void randomizeDirections(int array[5]) {
+    bool isInArray[5] = { false };
+    int elementInArray = 0;
+
+    while (elementInArray < 4){
+      int randomNumber = rand() % 4;
+      if (!isInArray[randomNumber]){
+        array[elementInArray++] = randomNumber;
+        isInArray[randomNumber] = true;
+      }
+    }
+  }
+
   const char TemplateMaze[H + 1][W + 1] = {
     "###############################################################################################################",
     "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
@@ -73,20 +86,14 @@ namespace MazeSolvingScreen {
     }    
   }
 
+  Point::Point* Maze[H + 1][W + 1];
+  
+  UserInterface::Button btnRecursiveBacktracking;
+  UserInterface::Button btnPrim;
+  UserInterface::Button btnKruskal;
+  UserInterface::Button btnBack;
+
   namespace RecursiveBacktracking {
-    void randomizeDirections(int array[5]) {
-      bool isInArray[5] = { false };
-      int elementInArray = 0;
-
-      while (elementInArray < 4){
-        int randomNumber = rand() % 4;
-        if (!isInArray[randomNumber]){
-          array[elementInArray++] = randomNumber;
-          isInArray[randomNumber] = true;
-        }
-      }
-    }
-
     void recursiveBacktracking(Point::Point* Maze[H + 1][W + 1], int posX, int posY) {
       if (posX < 0 || posY < 0 || posX > H - 1 || posY > W - 3) return;
 
@@ -109,7 +116,7 @@ namespace MazeSolvingScreen {
           Maze[posX + dirX[order[i]]][posY + dirY[order[i]]]->symbol = ' ';
           Maze[posX + dirX[order[i]]][posY + dirY[order[i]]]->visited = true;
 
-          Utility::setConsoleTextColor("FOREGROUND_GREEN");
+          Utility::setConsoleTextColor("FOREGROUND_BLUE");
           Utility::setConsoleCursorPosition(posY + 4 + dirY[order[i]], posX + 2 + dirX[order[i]]);
           printf("%c", Globals::BLOCK);
 
@@ -131,16 +138,172 @@ namespace MazeSolvingScreen {
         printf(" ");
       }
     
+      directions.clear();
+      directions.shrink_to_fit();
+
       Sleep(5);
     }
   }
 
-  Point::Point* Maze[H + 1][W + 1];
+  namespace Prim {
+    void colorFrontiers(vector<Point::Point*> frontiers){
+      for (int i = 0; i < frontiers.size(); i++){
+        Utility::setConsoleCursorPosition(frontiers.at(i)->position.y + 4, frontiers.at(i)->position.x + 2);
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
+        printf("%c", Globals::BLOCK);
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+      }
+    }
 
-  UserInterface::Button btnRecursiveBacktracking;
-  UserInterface::Button btnPrim;
-  UserInterface::Button btnKruskal;
-  UserInterface::Button btnBack;
+    void prim(Point::Point *Maze[H + 1][W + 1], int posX, int posY) {
+      vector <Point::Point*> frontiers;
+      frontiers.push_back(Maze[posX][posY]);
+      Maze[posX][posY]->visited = true;
+
+      while (frontiers.size() > 0) {
+        int randomIndex = rand() % (frontiers.size());
+        Point::Point* current = frontiers.at(randomIndex);
+
+        Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+        printf(" ");
+        Sleep(5);
+
+        int order[5];
+        randomizeDirections(order);
+        for (int i = 0; i < 4; i++) {
+          if (current->position.x + 2 * dirX[order[i]] < 0     ||
+              current->position.y + 2 * dirY[order[i]] < 0     || 
+              current->position.x + 2 * dirX[order[i]] > H - 1 || 
+              current->position.y + 2 * dirY[order[i]] > W - 3 ||
+              Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited) continue;
+
+          Utility::setConsoleCursorPosition(current->position.y + dirY[order[i]] + 4, current->position.x + dirX[order[i]] + 2);
+          printf(" ");
+          Sleep(5);
+
+          Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->visited = true;
+          Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->symbol = ' ';
+          
+          Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited = true;
+
+          frontiers.push_back(Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]);
+        }
+
+        frontiers.erase(frontiers.begin() + randomIndex);
+        Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+        printf(" ");
+
+        colorFrontiers(frontiers);
+      }
+    }
+  }
+
+  namespace Kruskal {
+    struct Set{
+      int x;
+      int y;
+    };
+
+    Set disjointSet[H + 1][W + 1];
+
+    void initializeDisjointSet() {
+      for (int i = 1; i <= H - 2; i += 2)
+        for (int j = 1; j <= W - 2; j += 2) {
+          Set newSet = { i, j };
+          disjointSet[i][j] = newSet;
+        }
+    }
+
+    vector<Point::Point*> listAllFrontiers(){
+      vector <Point::Point*> result;
+
+      for (int i = 1; i <= H - 2; i += 2)
+        for (int j = 1; j <= W - 4; j += 2) result.push_back(Maze[i][j]);
+      
+      return result;
+    }
+
+    bool isSameSet(Point::Point *current, int dirX, int dirY){
+      Set set1 = disjointSet[current->position.x][current->position.y];
+      Set set2 = disjointSet[current->position.x + dirX][current->position.y + dirY];
+
+      if (set1.x != set2.x || set1.y != set2.y) return false;
+      return true;
+    }
+
+    void joinSet(Point::Point *current, int dirX, int dirY){
+      Set set1 = disjointSet[current->position.x][current->position.y];
+      Set set2 = disjointSet[current->position.x + dirX][current->position.y + dirY];
+
+      for (int i = 1; i <= H - 2; i += 2)
+        for (int j = 1; j <= W - 2; j += 2) {
+            if (disjointSet[i][j].x == set2.x && disjointSet[i][j].y == set2.y){
+              disjointSet[i][j].x = set1.x;
+              disjointSet[i][j].y = set1.y;
+            }
+        }
+    }
+
+    bool breakWall(Point::Point* current){
+      int order[5];
+      randomizeDirections(order);
+
+      for (int i = 0; i < 4; i++) {
+        if (current->position.x + 2 * dirX[order[i]] < 0 ||
+            current->position.x + 2 * dirX[order[i]] > H - 1 ||
+            current->position.y + 2 * dirY[order[i]] < 0 ||
+            current->position.y + 2 * dirY[order[i]] > W - 3 ||
+            isSameSet(current, 2 * dirX[order[i]], 2 * dirY[order[i]])) continue;
+
+        Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->visited = true;
+        Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->symbol = ' ';
+
+        Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited = true;
+
+        Utility::setConsoleTextColor("FOREGROUND_BLUE");
+        Utility::setConsoleCursorPosition(4 + current->position.y + dirY[order[i]], 2 + current->position.x + dirX[order[i]]);
+        printf("%c", Globals::BLOCK);
+        Sleep(1);
+
+        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * dirY[order[i]], 2 + current->position.x + 2 * dirX[order[i]]);
+        printf("%c", Globals::BLOCK);
+        Sleep(1);
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
+        Utility::setConsoleCursorPosition(4 + current->position.y + dirY[order[i]], 2 + current->position.x + dirX[order[i]]);
+        printf(" ");
+        Sleep(1);
+
+        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * dirY[order[i]], 2 + current->position.x + 2 * dirX[order[i]]);
+        printf(" ");
+        Sleep(1);
+        joinSet(current, 2 * dirX[order[i]], 2 * dirY[order[i]]);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    void kruskal(Point::Point *Maze[H + 1][W + 1]){
+      vector<Point::Point*> frontiers;
+      frontiers = listAllFrontiers();
+
+      initializeDisjointSet();
+
+      while (frontiers.size() > 0){
+        int randomIndex = rand() % frontiers.size();
+        Point::Point* current = frontiers.at(randomIndex);
+
+        Utility::setConsoleCursorPosition(4 + current->position.y, 2 + current->position.x);
+        printf(" ");
+        Sleep(5);
+
+        if (!breakWall(current)) frontiers.erase(frontiers.begin() + randomIndex);
+      }
+    }
+  }
 
   void initializeMaze(){
     for (int i = 0; i < H; i++)
@@ -198,10 +361,14 @@ namespace MazeSolvingScreen {
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
-      
+      Prim::prim(Maze, 1, 1);
+      while (true);
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
+      Kruskal::kruskal(Maze);
+      while (true);
+
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
       return false;
