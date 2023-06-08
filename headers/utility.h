@@ -11,6 +11,8 @@ namespace Utility {
     void animateOuterBorder(short delay);
 
     void animateInnerBorder(short delay);
+  
+    void clearButtons();
   }
 }
 

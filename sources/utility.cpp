@@ -116,6 +116,19 @@ namespace Utility {
         printf("%c", Globals::HORIZONTALPIECE);
       }
     }
+  
+    void clearButtons() {
+      const short Y = 25;
+
+      for (short i = 1; i < Globals::WIDTH - 1; i++) {
+        Utility::setConsoleCursorPosition(i, Y - 1);
+        printf(" ");
+        Utility::setConsoleCursorPosition(i, Y);
+        printf(" ");
+        Utility::setConsoleCursorPosition(i, Y + 1);
+        printf(" ");
+      }
+    }
   }
 }
 

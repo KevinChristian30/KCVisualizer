@@ -292,7 +292,7 @@ namespace MazeSolvingScreen {
 
       initializeDisjointSet();
 
-      while (frontiers.size() > 0){
+      while (frontiers.size() > 0) {
         int randomIndex = rand() % frontiers.size();
         Point::Point* current = frontiers.at(randomIndex);
 
@@ -354,22 +354,94 @@ namespace MazeSolvingScreen {
     UserInterface::renderButton(btnBack);
   }
 
-  bool handleClick(POINT cursorPosition) {
+  void displayGeneratingView() {
+    const short X = 29;
+    const short Y = 25;
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
+    Utility::setConsoleCursorPosition(X + 22, Y);
+    printf("Generating Maze");
+  }
+
+  void displaySolveButtons() {
+    strncpy(btnRecursiveBacktracking.text, "BFS", 20);
+    strncpy(btnPrim.text, "DFS", 20);
+    strncpy(btnKruskal.text, "Dijkstra's", 20);
+    strncpy(btnBack.text, "A*", 20);
+
+    UserInterface::renderButton(btnRecursiveBacktracking);
+    UserInterface::renderButton(btnPrim);
+    UserInterface::renderButton(btnKruskal);
+    UserInterface::renderButton(btnBack);
+  }
+
+  bool handleSolveClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
-      RecursiveBacktracking::recursiveBacktracking(Maze, 1, 1);
-      while (true);
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
-      Prim::prim(Maze, 1, 1);
-      while (true);
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
-      Kruskal::kruskal(Maze);
-      while (true);
 
       return false;
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool setSolveEventListener() {
+    POINT cursorPosition;
+	  HWND hWnd = GetForegroundWindow();
+
+    while (1) {
+      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
+        GetCursorPos(&cursorPosition);
+        ScreenToClient(hWnd, &cursorPosition);
+      
+        if (!handleSolveClick(cursorPosition)) return false;
+      }
+    }
+  }
+
+  bool handleClick(POINT cursorPosition) {
+    if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
+      Utility::UI::clearButtons();
+      displayGeneratingView();
+
+      RecursiveBacktracking::recursiveBacktracking(Maze, 1, 1);
+
+      Utility::UI::clearButtons();
+      displaySolveButtons();
+
+      return setSolveEventListener();
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
+      Utility::UI::clearButtons();
+      displayGeneratingView();
+
+      Prim::prim(Maze, 1, 1);
+
+      Utility::UI::clearButtons();
+      displaySolveButtons();
+      
+      displaySolveButtons();
+
+      return setSolveEventListener();
+    } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
+      Utility::UI::clearButtons();
+      displayGeneratingView();
+
+      Kruskal::kruskal(Maze);
+
+      Utility::UI::clearButtons();
+      displaySolveButtons();
+      
+      displaySolveButtons();
+
+      return setSolveEventListener();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
       return false;
     }

@@ -324,19 +324,6 @@ namespace SortingScreen {
     UserInterface::renderButton(btnBack);
   }
 
-  void clearButtons() {
-    const short Y = 25;
-
-    for (short i = 1; i < Globals::WIDTH - 1; i++) {
-      Utility::setConsoleCursorPosition(i, Y - 1);
-      printf(" ");
-      Utility::setConsoleCursorPosition(i, Y);
-      printf(" ");
-      Utility::setConsoleCursorPosition(i, Y + 1);
-      printf(" ");
-    }
-  }
-
   void animateBarsSorted(Bar::Bar *bars, short startIndex = 4, short endIndex = 112) {
     Utility::setConsoleTextColor("FOREGROUND_GREEN");
     
@@ -347,7 +334,7 @@ namespace SortingScreen {
   }
 
   void waitForLeftClick() {
-    clearButtons();
+    Utility::UI::clearButtons();
 
     const short X = 22;
     const short Y = 25;
@@ -362,7 +349,7 @@ namespace SortingScreen {
 
   bool handleClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnQuickSort, cursorPosition)){
-      clearButtons();
+      Utility::UI::clearButtons();
       displaySortingStatistics();
 
       QuickSort::quickSort(bars);
@@ -372,7 +359,7 @@ namespace SortingScreen {
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
-      clearButtons();
+      Utility::UI::clearButtons();
       displaySortingStatistics();
 
       MergeSort::mergeSort(bars);
@@ -389,7 +376,7 @@ namespace SortingScreen {
         toSort[i - 4].height = bars[i].height;
       }
 
-      clearButtons();
+      Utility::UI::clearButtons();
       displaySortingStatistics();
 
       HeapSort::heapSort(toSort, 109);
