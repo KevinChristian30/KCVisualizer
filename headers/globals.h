@@ -9,6 +9,9 @@ namespace Globals {
   const short WIDTH = 115;
   const short HEIGHT = 27;
 
+  const short SPACEWIDTH = 11;
+  const short SPACEHEIGHT = 24;
+
   const short HORIZONTALPIECE = 205;
   const short VERTICALPIECE = 186;
   const short TOPLEFTPIECE = 201;

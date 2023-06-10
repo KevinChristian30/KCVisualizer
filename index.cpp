@@ -28,10 +28,18 @@ void setRandomNumberSeed() {
   srand(time(0));
 }
 
+void disableResize() {
+  HWND consoleWindow = GetConsoleWindow();
+  LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+  style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX);
+  SetWindowLong(consoleWindow, GWL_STYLE, style);
+}
+
 void initializeApp() {
   hideCursor();
   disableLeftClickConsolePause();
   setRandomNumberSeed();
+  disableResize();
 }
 
 int main() {

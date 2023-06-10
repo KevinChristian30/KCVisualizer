@@ -407,6 +407,37 @@ namespace MazeSolvingScreen {
     }
   }
 
+  bool isValidPoint(POINT cursorPosition) {
+    int x, y;
+    Utility::UI::translateCursorPositionToSpaces(cursorPosition, &x, &y);
+
+    // Check if Out of Bounds
+    // Check if Is Wall
+
+    Utility::setConsoleCursorPosition(x, y);
+    Utility::setConsoleTextColor("FOREGROUND_GREEN");
+    printf("%c", Globals::BLOCK);
+    
+    return true;
+  }
+
+  bool waitForStartingAndEndingPointInputs() {
+    POINT startCursorPosition, finishCursorPosition;
+	  HWND hWnd = GetForegroundWindow();
+
+    int count = 0;
+    while (true) {
+      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
+        GetCursorPos(&startCursorPosition);
+        ScreenToClient(hWnd, &startCursorPosition);
+        isValidPoint(startCursorPosition);
+        // After starting point and ending point is selected, display sorting buttons and listen to sorting buttons
+      }
+    }
+
+    return false;
+  }
+
   bool handleClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
       Utility::UI::clearButtons();
@@ -417,7 +448,7 @@ namespace MazeSolvingScreen {
       Utility::UI::clearButtons();
       displaySolveButtons();
 
-      return setSolveEventListener();
+      return waitForStartingAndEndingPointInputs();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -429,7 +460,7 @@ namespace MazeSolvingScreen {
       
       displaySolveButtons();
 
-      return setSolveEventListener();
+      return waitForStartingAndEndingPointInputs();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -441,7 +472,7 @@ namespace MazeSolvingScreen {
       
       displaySolveButtons();
 
-      return setSolveEventListener();
+      return waitForStartingAndEndingPointInputs();
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
       return false;
     }

@@ -1,6 +1,8 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <windows.h>
+
 namespace Utility {
   void clearScreen();
   void setConsoleCursorPosition(short x, short y);
@@ -13,6 +15,8 @@ namespace Utility {
     void animateInnerBorder(short delay);
   
     void clearButtons();
+
+    void translateCursorPositionToSpaces(POINT cursorPosition, int *x, int *y);
   }
 }
 

@@ -129,6 +129,11 @@ namespace Utility {
         printf(" ");
       }
     }
+  
+    void translateCursorPositionToSpaces(POINT cursorPosition, int *x, int *y) {
+      *x = cursorPosition.x / Globals::SPACEWIDTH;
+      *y = cursorPosition.y / Globals::SPACEHEIGHT;
+    }
   }
 }
 
