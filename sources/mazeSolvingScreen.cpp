@@ -365,6 +365,8 @@ namespace MazeSolvingScreen {
   }
 
   void displaySolveButtons() {
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
     strncpy(btnRecursiveBacktracking.text, "BFS", 20);
     strncpy(btnPrim.text, "DFS", 20);
     strncpy(btnKruskal.text, "Dijkstra's", 20);
@@ -393,7 +395,7 @@ namespace MazeSolvingScreen {
     return true;
   }
 
-  bool setSolveEventListener() {
+  void setSolveEventListener() {
     POINT cursorPosition;
 	  HWND hWnd = GetForegroundWindow();
 
@@ -402,7 +404,7 @@ namespace MazeSolvingScreen {
         GetCursorPos(&cursorPosition);
         ScreenToClient(hWnd, &cursorPosition);
       
-        if (!handleSolveClick(cursorPosition)) return false;
+        if (!handleSolveClick(cursorPosition)) break;
       }
     }
   }
@@ -411,31 +413,50 @@ namespace MazeSolvingScreen {
     int x, y;
     Utility::UI::translateCursorPositionToSpaces(cursorPosition, &x, &y);
 
-    // Check if Out of Bounds
-    // Check if Is Wall
+    if (x < 4 || x > Globals::WIDTH - 3 || y < 2 || y > Globals::HEIGHT - 5) 
+      return false;
 
-    Utility::setConsoleCursorPosition(x, y);
-    Utility::setConsoleTextColor("FOREGROUND_GREEN");
-    printf("%c", Globals::BLOCK);
-    
+    if (Maze[y - 2][x - 4]->symbol == '#') return false;
+
     return true;
   }
 
-  bool waitForStartingAndEndingPointInputs() {
+  void waitForStartingAndEndingPointInputs() {
     POINT startCursorPosition, finishCursorPosition;
 	  HWND hWnd = GetForegroundWindow();
 
-    int count = 0;
-    while (true) {
+    int numberOfPointsSelected = 0;
+    while (numberOfPointsSelected < 2) {
       if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-        GetCursorPos(&startCursorPosition);
-        ScreenToClient(hWnd, &startCursorPosition);
-        isValidPoint(startCursorPosition);
-        // After starting point and ending point is selected, display sorting buttons and listen to sorting buttons
+        if (numberOfPointsSelected == 0) {
+          GetCursorPos(&startCursorPosition);
+          ScreenToClient(hWnd, &startCursorPosition);
+          if (isValidPoint(startCursorPosition)) {
+            int x, y;
+            Utility::UI::translateCursorPositionToSpaces(startCursorPosition, &x, &y);
+            
+            Utility::setConsoleTextColor("FOREGROUND_GREEN");
+            Utility::setConsoleCursorPosition(x, y);
+            printf("%c", Globals::BLOCK);
+
+            numberOfPointsSelected++;
+          }
+        } else {
+          GetCursorPos(&finishCursorPosition);
+          ScreenToClient(hWnd, &finishCursorPosition);
+          if (isValidPoint(finishCursorPosition)) {
+            int x, y;
+            Utility::UI::translateCursorPositionToSpaces(finishCursorPosition, &x, &y);
+            
+            Utility::setConsoleTextColor("FOREGROUND_RED");
+            Utility::setConsoleCursorPosition(x, y);
+            printf("%c", Globals::BLOCK);
+
+            numberOfPointsSelected++;
+          }
+        }
       }
     }
-
-    return false;
   }
 
   bool handleClick(POINT cursorPosition) {
@@ -446,9 +467,12 @@ namespace MazeSolvingScreen {
       RecursiveBacktracking::recursiveBacktracking(Maze, 1, 1);
 
       Utility::UI::clearButtons();
+      waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      return waitForStartingAndEndingPointInputs();
+      setSolveEventListener();
+
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -456,11 +480,12 @@ namespace MazeSolvingScreen {
       Prim::prim(Maze, 1, 1);
 
       Utility::UI::clearButtons();
-      displaySolveButtons();
-      
+      waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      return waitForStartingAndEndingPointInputs();
+      setSolveEventListener();
+
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -468,11 +493,12 @@ namespace MazeSolvingScreen {
       Kruskal::kruskal(Maze);
 
       Utility::UI::clearButtons();
-      displaySolveButtons();
-      
+      waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      return waitForStartingAndEndingPointInputs();
+      setSolveEventListener();
+
+      return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
       return false;
     }
