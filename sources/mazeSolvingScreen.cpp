@@ -4,21 +4,18 @@
 #include <stdio.h>
 #include <windows.h>
 #include <limits.h>
-#include <math.h>
 #include <vector>
 
 #include "../headers/globals.h"
 #include "../headers/utility.h"
 #include "../headers/userInterface.h"
+#include "../headers/bfs.h"
 
 using namespace std;
 
 namespace MazeSolvingScreen {
   const short H = Globals::HEIGHT - 6;
   const short W = Globals::WIDTH - 4;
-
-  const short dirX[] = {0, 1, 0, -1};
-  const short dirY[] = {-1, 0, 1, 0};
 
   void randomizeDirections(int array[5]) {
     bool isInArray[5] = { false };
@@ -33,60 +30,8 @@ namespace MazeSolvingScreen {
     }
   }
 
-  const char TemplateMaze[H + 1][W + 1] = {
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-    "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
-    "###############################################################################################################",
-  };
-
-  namespace Point {
-    struct Point {
-      UserInterface::Position position;
-      int cost;
-      char symbol;
-      bool visited;
-      Point* prev;
-    };
-
-    Point* createPoint(short x, short y){
-      Point* newPoint = (Point*) malloc(sizeof(Point));
-      
-      newPoint->position = { x, y };
-      newPoint->symbol = TemplateMaze[x][y];
-      newPoint->cost = INT_MAX;;
-      newPoint->visited = false;
-      newPoint->prev = NULL;
-
-      return newPoint;
-    }
-
-    int findDistance(Point* point, UserInterface::Position position){
-      int distanceX = pow(point->position.x - position.x, 2);
-      int distanceY = pow(point->position.y - position.y, 2);
-
-      return point->cost + sqrt(distanceX + distanceY);
-    }    
-  }
-
-  Point::Point* Maze[H + 1][W + 1];
+  UserInterface::Point::Point* Maze[H + 1][W + 1];
+  POINT startCursorPosition, finishCursorPosition;
   
   UserInterface::Button btnRecursiveBacktracking;
   UserInterface::Button btnPrim;
@@ -94,7 +39,7 @@ namespace MazeSolvingScreen {
   UserInterface::Button btnBack;
 
   namespace RecursiveBacktracking {
-    void recursiveBacktracking(Point::Point* Maze[H + 1][W + 1], int posX, int posY) {
+    void recursiveBacktracking(UserInterface::Point::Point* Maze[H + 1][W + 1], int posX, int posY) {
       if (posX < 0 || posY < 0 || posX > H - 1 || posY > W - 3) return;
 
       Maze[posX][posY]->visited = true;
@@ -102,30 +47,30 @@ namespace MazeSolvingScreen {
       int order[5];
       randomizeDirections(order);
 
-      vector <Point::Point*> directions;
+      vector <UserInterface::Point::Point*> directions;
 
       for (int i = 0; i < 4; i++) {
-        if (posX + (2 * dirX[order[i]]) < 0 || 
-            posX + (2 * dirX[order[i]]) > H - 1 ||
-            posY + (2 * dirY[order[i]]) < 0 || 
-            posY + (2 * dirY[order[i]]) > W - 3) continue;
+        if (posX + (2 * Globals::dirX[order[i]]) < 0 || 
+            posX + (2 * Globals::dirX[order[i]]) > H - 1 ||
+            posY + (2 * Globals::dirY[order[i]]) < 0 || 
+            posY + (2 * Globals::dirY[order[i]]) > W - 3) continue;
 
-        if (Maze[posX + (2 * dirX[order[i]])][posY + (2 * dirY[order[i]])]->visited == false) {
-          directions.push_back(Point::createPoint(dirX[order[i]], dirY[order[i]]));
+        if (Maze[posX + (2 * Globals::dirX[order[i]])][posY + (2 * Globals::dirY[order[i]])]->visited == false) {
+          directions.push_back(UserInterface::Point::createPoint(Globals::dirX[order[i]], Globals::dirY[order[i]]));
 
-          Maze[posX + dirX[order[i]]][posY + dirY[order[i]]]->symbol = ' ';
-          Maze[posX + dirX[order[i]]][posY + dirY[order[i]]]->visited = true;
+          Maze[posX + Globals::dirX[order[i]]][posY + Globals::dirY[order[i]]]->symbol = ' ';
+          Maze[posX + Globals::dirX[order[i]]][posY + Globals::dirY[order[i]]]->visited = true;
 
           Utility::setConsoleTextColor("FOREGROUND_BLUE");
-          Utility::setConsoleCursorPosition(posY + 4 + dirY[order[i]], posX + 2 + dirX[order[i]]);
+          Utility::setConsoleCursorPosition(posY + 4 + Globals::dirY[order[i]], posX + 2 + Globals::dirX[order[i]]);
           printf("%c", Globals::BLOCK);
 
           Utility::setConsoleCursorPosition(posY + 4, posX + 2);
           printf("%c", Globals::BLOCK);
-          Sleep(5);
+          // Sleep(5);
           Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
-          recursiveBacktracking(Maze, posX + (2 * dirX[order[i]]), posY + (2 * dirY[order[i]]));
+          recursiveBacktracking(Maze, posX + (2 * Globals::dirX[order[i]]), posY + (2 * Globals::dirY[order[i]]));
         } 
       }
 
@@ -141,12 +86,12 @@ namespace MazeSolvingScreen {
       directions.clear();
       directions.shrink_to_fit();
 
-      Sleep(5);
+      // Sleep(5);
     }
   }
 
   namespace Prim {
-    void colorFrontiers(vector<Point::Point*> frontiers){
+    void colorFrontiers(vector<UserInterface::Point::Point*> frontiers){
       for (int i = 0; i < frontiers.size(); i++){
         Utility::setConsoleCursorPosition(frontiers.at(i)->position.y + 4, frontiers.at(i)->position.x + 2);
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
@@ -155,14 +100,14 @@ namespace MazeSolvingScreen {
       }
     }
 
-    void prim(Point::Point *Maze[H + 1][W + 1], int posX, int posY) {
-      vector <Point::Point*> frontiers;
+    void prim(UserInterface::Point::Point *Maze[H + 1][W + 1], int posX, int posY) {
+      vector <UserInterface::Point::Point*> frontiers;
       frontiers.push_back(Maze[posX][posY]);
       Maze[posX][posY]->visited = true;
 
       while (frontiers.size() > 0) {
         int randomIndex = rand() % (frontiers.size());
-        Point::Point* current = frontiers.at(randomIndex);
+        UserInterface::Point::Point* current = frontiers.at(randomIndex);
 
         Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
         printf(" ");
@@ -171,22 +116,22 @@ namespace MazeSolvingScreen {
         int order[5];
         randomizeDirections(order);
         for (int i = 0; i < 4; i++) {
-          if (current->position.x + 2 * dirX[order[i]] < 0     ||
-              current->position.y + 2 * dirY[order[i]] < 0     || 
-              current->position.x + 2 * dirX[order[i]] > H - 1 || 
-              current->position.y + 2 * dirY[order[i]] > W - 3 ||
-              Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited) continue;
+          if (current->position.x + 2 * Globals::dirX[order[i]] < 0     ||
+              current->position.y + 2 * Globals::dirY[order[i]] < 0     || 
+              current->position.x + 2 * Globals::dirX[order[i]] > H - 1 || 
+              current->position.y + 2 * Globals::dirY[order[i]] > W - 3 ||
+              Maze[current->position.x + 2 * Globals::dirX[order[i]]][current->position.y + 2 * Globals::dirY[order[i]]]->visited) continue;
 
-          Utility::setConsoleCursorPosition(current->position.y + dirY[order[i]] + 4, current->position.x + dirX[order[i]] + 2);
+          Utility::setConsoleCursorPosition(current->position.y + Globals::dirY[order[i]] + 4, current->position.x + Globals::dirX[order[i]] + 2);
           printf(" ");
           Sleep(5);
 
-          Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->visited = true;
-          Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->symbol = ' ';
+          Maze[current->position.x + Globals::dirX[order[i]]][current->position.y + Globals::dirY[order[i]]]->visited = true;
+          Maze[current->position.x + Globals::dirX[order[i]]][current->position.y + Globals::dirY[order[i]]]->symbol = ' ';
           
-          Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited = true;
+          Maze[current->position.x + 2 * Globals::dirX[order[i]]][current->position.y + 2 * Globals::dirY[order[i]]]->visited = true;
 
-          frontiers.push_back(Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]);
+          frontiers.push_back(Maze[current->position.x + 2 * Globals::dirX[order[i]]][current->position.y + 2 * Globals::dirY[order[i]]]);
         }
 
         frontiers.erase(frontiers.begin() + randomIndex);
@@ -215,8 +160,8 @@ namespace MazeSolvingScreen {
         }
     }
 
-    vector<Point::Point*> listAllFrontiers(){
-      vector <Point::Point*> result;
+    vector<UserInterface::Point::Point*> listAllFrontiers(){
+      vector <UserInterface::Point::Point*> result;
 
       for (int i = 1; i <= H - 2; i += 2)
         for (int j = 1; j <= W - 4; j += 2) result.push_back(Maze[i][j]);
@@ -224,7 +169,7 @@ namespace MazeSolvingScreen {
       return result;
     }
 
-    bool isSameSet(Point::Point *current, int dirX, int dirY){
+    bool isSameSet(UserInterface::Point::Point *current, int dirX, int dirY){
       Set set1 = disjointSet[current->position.x][current->position.y];
       Set set2 = disjointSet[current->position.x + dirX][current->position.y + dirY];
 
@@ -232,7 +177,7 @@ namespace MazeSolvingScreen {
       return true;
     }
 
-    void joinSet(Point::Point *current, int dirX, int dirY){
+    void joinSet(UserInterface::Point::Point *current, int dirX, int dirY){
       Set set1 = disjointSet[current->position.x][current->position.y];
       Set set2 = disjointSet[current->position.x + dirX][current->position.y + dirY];
 
@@ -245,40 +190,40 @@ namespace MazeSolvingScreen {
         }
     }
 
-    bool breakWall(Point::Point* current){
+    bool breakWall(UserInterface::Point::Point* current){
       int order[5];
       randomizeDirections(order);
 
       for (int i = 0; i < 4; i++) {
-        if (current->position.x + 2 * dirX[order[i]] < 0 ||
-            current->position.x + 2 * dirX[order[i]] > H - 1 ||
-            current->position.y + 2 * dirY[order[i]] < 0 ||
-            current->position.y + 2 * dirY[order[i]] > W - 3 ||
-            isSameSet(current, 2 * dirX[order[i]], 2 * dirY[order[i]])) continue;
+        if (current->position.x + 2 * Globals::dirX[order[i]] < 0 ||
+            current->position.x + 2 * Globals::dirX[order[i]] > H - 1 ||
+            current->position.y + 2 * Globals::dirY[order[i]] < 0 ||
+            current->position.y + 2 * Globals::dirY[order[i]] > W - 3 ||
+            isSameSet(current, 2 * Globals::dirX[order[i]], 2 * Globals::dirY[order[i]])) continue;
 
-        Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->visited = true;
-        Maze[current->position.x + dirX[order[i]]][current->position.y + dirY[order[i]]]->symbol = ' ';
+        Maze[current->position.x + Globals::dirX[order[i]]][current->position.y + Globals::dirY[order[i]]]->visited = true;
+        Maze[current->position.x + Globals::dirX[order[i]]][current->position.y + Globals::dirY[order[i]]]->symbol = ' ';
 
-        Maze[current->position.x + 2 * dirX[order[i]]][current->position.y + 2 * dirY[order[i]]]->visited = true;
+        Maze[current->position.x + 2 * Globals::dirX[order[i]]][current->position.y + 2 * Globals::dirY[order[i]]]->visited = true;
 
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
-        Utility::setConsoleCursorPosition(4 + current->position.y + dirY[order[i]], 2 + current->position.x + dirX[order[i]]);
+        Utility::setConsoleCursorPosition(4 + current->position.y + Globals::dirY[order[i]], 2 + current->position.x + Globals::dirX[order[i]]);
         printf("%c", Globals::BLOCK);
         Sleep(1);
 
-        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * dirY[order[i]], 2 + current->position.x + 2 * dirX[order[i]]);
+        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * Globals::dirY[order[i]], 2 + current->position.x + 2 * Globals::dirX[order[i]]);
         printf("%c", Globals::BLOCK);
         Sleep(1);
         Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
-        Utility::setConsoleCursorPosition(4 + current->position.y + dirY[order[i]], 2 + current->position.x + dirX[order[i]]);
+        Utility::setConsoleCursorPosition(4 + current->position.y + Globals::dirY[order[i]], 2 + current->position.x + Globals::dirX[order[i]]);
         printf(" ");
         Sleep(1);
 
-        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * dirY[order[i]], 2 + current->position.x + 2 * dirX[order[i]]);
+        Utility::setConsoleCursorPosition(4 + current->position.y + 2 * Globals::dirY[order[i]], 2 + current->position.x + 2 * Globals::dirX[order[i]]);
         printf(" ");
         Sleep(1);
-        joinSet(current, 2 * dirX[order[i]], 2 * dirY[order[i]]);
+        joinSet(current, 2 * Globals::dirX[order[i]], 2 * Globals::dirY[order[i]]);
 
         return true;
       }
@@ -286,15 +231,15 @@ namespace MazeSolvingScreen {
       return false;
     }
 
-    void kruskal(Point::Point *Maze[H + 1][W + 1]){
-      vector<Point::Point*> frontiers;
+    void kruskal(UserInterface::Point::Point *Maze[H + 1][W + 1]){
+      vector<UserInterface::Point::Point*> frontiers;
       frontiers = listAllFrontiers();
 
       initializeDisjointSet();
 
       while (frontiers.size() > 0) {
         int randomIndex = rand() % frontiers.size();
-        Point::Point* current = frontiers.at(randomIndex);
+        UserInterface::Point::Point* current = frontiers.at(randomIndex);
 
         Utility::setConsoleCursorPosition(4 + current->position.y, 2 + current->position.x);
         printf(" ");
@@ -307,7 +252,7 @@ namespace MazeSolvingScreen {
 
   void initializeMaze(){
     for (int i = 0; i < H; i++)
-      for (int j = 0; j < W; j++) Maze[i][j] = Point::createPoint(i, j);
+      for (int j = 0; j < W; j++) Maze[i][j] = UserInterface::Point::createPoint(i, j);
   }
 
   void animateRawMaze(){
@@ -380,6 +325,19 @@ namespace MazeSolvingScreen {
 
   bool handleSolveClick(POINT cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
+      int startX, startY, finishX, finishY;
+      
+      Utility::UI::translateCursorPositionToSpaces(startCursorPosition, &startX, &startY);
+      Utility::UI::translateCursorPositionToSpaces(finishCursorPosition, &finishX, &finishY);
+      
+      UserInterface::Position start = { (short) ((startX) - 4), (short) ((startY) - 2) };
+      UserInterface::Position finish = { (short) ((finishX) - 4), (short) ((finishY) - 2) };
+
+      BFS::BFS(Maze, start, finish);
+
+      Utility::setConsoleCursorPosition(0, 0);
+
+      while (true);
 
       return false;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
@@ -422,7 +380,6 @@ namespace MazeSolvingScreen {
   }
 
   void waitForStartingAndEndingPointInputs() {
-    POINT startCursorPosition, finishCursorPosition;
 	  HWND hWnd = GetForegroundWindow();
 
     int numberOfPointsSelected = 0;

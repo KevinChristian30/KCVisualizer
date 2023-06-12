@@ -1,7 +1,7 @@
 CXX=g++
 
-output: utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o tspScreen.o sortingScreen.o mazeSolvingScreen.o sandboxScreen.o
-	$(CXX) utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o tspScreen.o sortingScreen.o mazeSolvingScreen.o sandboxScreen.o -o KCVisualizer
+output: utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o tspScreen.o sortingScreen.o mazeSolvingScreen.o sandboxScreen.o bfs.o
+	$(CXX) utility.o userInterface.o index.o loadingScreen.o mainMenuScreen.o exitScreen.o tspScreen.o sortingScreen.o mazeSolvingScreen.o sandboxScreen.o bfs.o -o KCVisualizer
 
 utility.o: sources/utility.cpp 
 	$(CXX) -c sources/utility.cpp 
@@ -32,6 +32,9 @@ mazeSolvingScreen.o: sources/mazeSolvingScreen.cpp
 
 sandboxScreen.o: sources/sandboxScreen.cpp
 	$(CXX) -c sources/sandboxScreen.cpp
+
+bfs.o: sources/bfs.cpp
+	$(CXX) -c sources/bfs.cpp
 
 clean:
 	del *.o KCVisualizer.exe

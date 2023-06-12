@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "../headers/globals.h"
 #include "../headers/utility.h"
@@ -68,6 +69,35 @@ namespace UserInterface {
       cursorPosition.x <= button.pixelPosition.maxX &&
       cursorPosition.y >= button.pixelPosition.minY &&
       cursorPosition.y <= button.pixelPosition.maxY;
+  }
+
+  namespace Point {
+    struct Point {
+      UserInterface::Position position;
+      int cost;
+      char symbol;
+      bool visited;
+      Point* prev;
+    };
+
+    Point* createPoint(short x, short y){
+      Point* newPoint = (Point*) malloc(sizeof(Point));
+      
+      newPoint->position = { x, y };
+      newPoint->symbol = Globals::TemplateMaze[x][y];
+      newPoint->cost = INT_MAX;
+      newPoint->visited = false;
+      newPoint->prev = NULL;
+
+      return newPoint;
+    }
+
+    int findDistance(Point* point, UserInterface::Position position){
+      int distanceX = pow(point->position.x - position.x, 2);
+      int distanceY = pow(point->position.y - position.y, 2);
+
+      return point->cost + sqrt(distanceX + distanceY);
+    }    
   }
 }
 
