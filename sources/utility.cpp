@@ -23,6 +23,8 @@ namespace Utility {
       SetConsoleTextAttribute(Globals::OUTPUT_HANDLE, FOREGROUND_GREEN);
     } else if (strcmp(colorName, "FOREGROUND_BLUE") == 0){
       SetConsoleTextAttribute(Globals::OUTPUT_HANDLE, FOREGROUND_LIGHTBLUE);
+    } else if (strcmp(colorName, "FOREGROUND_PURPLE") == 0){
+      SetConsoleTextAttribute(Globals::OUTPUT_HANDLE, FOREGROUND_RED | FOREGROUND_BLUE);
     } else if (strcmp(colorName, "FOREGROUND_WHITE") == 0){
       SetConsoleTextAttribute(Globals::OUTPUT_HANDLE, FOREGROUND_WHITE);
     } 

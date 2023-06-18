@@ -293,19 +293,15 @@ namespace SortingScreen {
     const short GAP = 6;
     
     btnQuickSort.position = { X, Y };
-    btnQuickSort.pixelPosition = { 60, 300, 580, 640 };
     strncpy(btnQuickSort.text, "Quick Sort", 20);
 
     btnMergeSort.position = { X + (22 * 1) + (GAP * 1), Y };
-    btnMergeSort.pixelPosition = { 380, 620, 580, 640 };
     strncpy(btnMergeSort.text, "Merge Sort", 20);
 
     btnHeapSort.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
-    btnHeapSort.pixelPosition = { 700, 940, 580, 640 };
     strncpy(btnHeapSort.text, "Heap Sort", 20);
 
     btnBack.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
-    btnBack.pixelPosition = { 990, 1230, 580, 640 };
     strncpy(btnBack.text, "Back", 20);
 
     bars = Bar::getRandomizedBars();

@@ -9,7 +9,7 @@
 #include "../headers/globals.h"
 #include "../headers/utility.h"
 #include "../headers/userInterface.h"
-#include "../headers/bfs.h"
+#include "../headers/solvingAlgorithms.h"
 
 using namespace std;
 
@@ -33,10 +33,10 @@ namespace MazeSolvingScreen {
   UserInterface::Point::Point* Maze[H + 1][W + 1];
   COORD startCursorPosition, finishCursorPosition;
   
-  UserInterface::Button btnRecursiveBacktracking;
-  UserInterface::Button btnPrim;
-  UserInterface::Button btnKruskal;
-  UserInterface::Button btnBack;
+  UserInterface::Button btn1;
+  UserInterface::Button btn2;
+  UserInterface::Button btn3;
+  UserInterface::Button btn4;
 
   namespace RecursiveBacktracking {
     void recursiveBacktracking(UserInterface::Point::Point* Maze[H + 1][W + 1], int posX, int posY) {
@@ -67,7 +67,7 @@ namespace MazeSolvingScreen {
 
           Utility::setConsoleCursorPosition(posY + 4, posX + 2);
           printf("%c", Globals::BLOCK_PIECE);
-          Sleep(5);
+          // Sleep(5);
           Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
           recursiveBacktracking(Maze, posX + (2 * Globals::dirX[order[i]]), posY + (2 * Globals::dirY[order[i]]));
@@ -86,7 +86,7 @@ namespace MazeSolvingScreen {
       directions.clear();
       directions.shrink_to_fit();
 
-      Sleep(5);
+      // Sleep(5);
     }
   }
 
@@ -270,21 +270,17 @@ namespace MazeSolvingScreen {
     const short Y = 24;
     const short GAP = 6;
     
-    btnRecursiveBacktracking.position = { X, Y };
-    btnRecursiveBacktracking.pixelPosition = { 60, 300, 580, 640 };
-    strncpy(btnRecursiveBacktracking.text, "Backtracking", 20);
+    btn1.position = { X, Y };
+    strncpy(btn1.text, "Backtracking", 20);
 
-    btnPrim.position = { X + (22 * 1) + (GAP * 1), Y };
-    btnPrim.pixelPosition = { 380, 620, 580, 640 };
-    strncpy(btnPrim.text, "Prim", 20);
+    btn2.position = { X + (22 * 1) + (GAP * 1), Y };
+    strncpy(btn2.text, "Prim", 20);
 
-    btnKruskal.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
-    btnKruskal.pixelPosition = { 700, 940, 580, 640 };
-    strncpy(btnKruskal.text, "Kruskal", 20);
+    btn3.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
+    strncpy(btn3.text, "Kruskal", 20);
 
-    btnBack.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
-    btnBack.pixelPosition = { 990, 1230, 580, 640 };
-    strncpy(btnBack.text, "Back", 20);
+    btn4.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
+    strncpy(btn4.text, "Back", 20);
   }
 
   void displayUIElements() {
@@ -293,10 +289,10 @@ namespace MazeSolvingScreen {
     
     animateRawMaze();
 
-    UserInterface::renderButton(btnRecursiveBacktracking);
-    UserInterface::renderButton(btnPrim);
-    UserInterface::renderButton(btnKruskal);
-    UserInterface::renderButton(btnBack);
+    UserInterface::renderButton(btn1);
+    UserInterface::renderButton(btn2);
+    UserInterface::renderButton(btn3);
+    UserInterface::renderButton(btn4);
   }
 
   void displayGeneratingView() {
@@ -312,36 +308,47 @@ namespace MazeSolvingScreen {
   void displaySolveButtons() {
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
-    strncpy(btnRecursiveBacktracking.text, "BFS", 20);
-    strncpy(btnPrim.text, "DFS", 20);
-    strncpy(btnKruskal.text, "Dijkstra's", 20);
-    strncpy(btnBack.text, "A*", 20);
+    strncpy(btn1.text, "BFS", 20);
+    strncpy(btn2.text, "DFS", 20);
+    strncpy(btn3.text, "Dijkstra's", 20);
+    strncpy(btn4.text, "A*", 20);
 
-    UserInterface::renderButton(btnRecursiveBacktracking);
-    UserInterface::renderButton(btnPrim);
-    UserInterface::renderButton(btnKruskal);
-    UserInterface::renderButton(btnBack);
+    UserInterface::renderButton(btn1);
+    UserInterface::renderButton(btn2);
+    UserInterface::renderButton(btn3);
+    UserInterface::renderButton(btn4);
   }
 
   bool handleSolveClick(COORD cursorPosition) {
-    if (UserInterface::isCursorInButton(btnRecursiveBacktracking, cursorPosition)) {
-      int startX, startY, finishX, finishY;
-      
-      UserInterface::Position start = { (short) (startCursorPosition.X - 4), (short) (startCursorPosition.Y - 2) };
-      UserInterface::Position finish = { (short) (finishCursorPosition.X - 4), (short) (finishCursorPosition.Y - 2) };
+    if (UserInterface::isCursorInButton(btn1, cursorPosition)) {
+      UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
+      UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
-      BFS::BFS(Maze, start, finish);
+      SolvingAlgorithms::BFS(Maze, start, finish);
 
       Utility::setConsoleCursorPosition(0, 0);
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnPrim, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn2, cursorPosition)) {
+      UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
+      UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
+
+      SolvingAlgorithms::DFS(Maze, start, finish);
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnKruskal, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn3, cursorPosition)) {
+      UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
+      UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
+
+      SolvingAlgorithms::dijkstra(Maze, start, finish);
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnBack, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn4, cursorPosition)) {
+      UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
+      UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
+
+      SolvingAlgorithms::aStar(Maze, start, finish);
+
       return true;
     }
 
@@ -367,6 +374,9 @@ namespace MazeSolvingScreen {
   }
 
   void waitForStartingAndEndingPointInputs() {
+    Utility::setConsoleCursorPosition(45, 25);
+    printf("Select Start and End Position");
+    
     int numberOfPointsSelected = 0;
 
     while (numberOfPointsSelected < 2) {
@@ -392,10 +402,12 @@ namespace MazeSolvingScreen {
         numberOfPointsSelected++;
       }
     }
+  
+    Utility::UI::clearButtons();
   }
 
   bool handleClick(COORD cursorPosition) {
-    if (UserInterface::isCursorInButton(btnRecursiveBacktracking, cursorPosition)) {
+    if (UserInterface::isCursorInButton(btn1, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -408,7 +420,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnPrim, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn2, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -421,7 +433,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnKruskal, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn3, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -434,7 +446,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isCursorInButton(btnBack, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btn4, cursorPosition)) {
       return true;
     }
 

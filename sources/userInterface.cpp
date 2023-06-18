@@ -9,27 +9,13 @@
 #include "../headers/utility.h"
 
 namespace UserInterface {
-  /**
-   * Position of a Button, starting from top left
-  */
   struct Position {
     short x;
     short y;
   };
 
-  /**
-   * Position of a Button in pixels, used to detect mouse click
-  */
-  struct PixelPosition {
-    short minX;
-    short maxX;
-    short minY;
-    short maxY;
-  };
-
   struct Button {
     Position position;
-    PixelPosition pixelPosition;
     char text[21];
   };
 
@@ -63,13 +49,22 @@ namespace UserInterface {
     printf("%c", Globals::BOTTOM_RIGHT_PIECE);
   };
 
- bool isCursorInButton(Button button, COORD cursorPosition) {
+  bool isCursorInButton(Button button, COORD cursorPosition) {
     return 
       cursorPosition.X >= button.position.x && 
       cursorPosition.X <= button.position.x + 22 &&
       cursorPosition.Y >= button.position.y &&
       cursorPosition.Y <= button.position.y + 2;
   }
+
+  Position translateUICoordinateToMazePoint(COORD coordinate) {
+    Position position = { 
+      (short) (coordinate.X - 4), 
+      (short) (coordinate.Y - 2) 
+    };
+
+    return position;
+  } 
 
   namespace Point {
     struct Point {
@@ -85,16 +80,16 @@ namespace UserInterface {
       
       newPoint->position = { x, y };
       newPoint->symbol = Globals::TEMPLATE_MAZE[x][y];
-      newPoint->cost = INT_MAX;
+      newPoint->cost = 999;
       newPoint->visited = false;
       newPoint->prev = NULL;
 
       return newPoint;
     }
 
-    int findDistance(Point* point, UserInterface::Position position){
-      int distanceX = pow(point->position.x - position.x, 2);
-      int distanceY = pow(point->position.y - position.y, 2);
+    int calculateDistance(Point* point, UserInterface::Position position){
+      int distanceX = pow(point->position.y - position.x, 2);
+      int distanceY = pow(point->position.x - position.y, 2);
 
       return point->cost + sqrt(distanceX + distanceY);
     }    

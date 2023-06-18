@@ -14,25 +14,16 @@ namespace UserInterface {
     short y;
   };
 
-  /**
-   * Position of a Button in pixels, used to detect mouse click
-  */
-  struct PixelPosition {
-    short minX;
-    short maxX;
-    short minY;
-    short maxY;
-  };
-
   struct Button {
     Position position;
-    PixelPosition pixelPosition;
     char text[21];
   };
 
   void renderButton(Button button);
 
   bool isCursorInButton(Button button, COORD cursorPosition);
+
+  Position translateUICoordinateToMazePoint(COORD coordinate);
 
   namespace Point {
     struct Point {
@@ -45,7 +36,7 @@ namespace UserInterface {
 
     Point* createPoint(short x, short y);
 
-    int findDistance(Point* point, UserInterface::Position position);
+    int calculateDistance(Point* point, UserInterface::Position position);
   }
 }
 
