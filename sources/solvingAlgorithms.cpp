@@ -130,9 +130,9 @@ namespace SolvingAlgorithms {
         if (Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->symbol == ' ' &&
             1 + Maze[current->position.x][current->position.y]->cost < 
             Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->cost
-            ){
+            ) {
               Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->prev = Maze[current->position.x][current->position.y];
-              Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->cost = Maze[current->position.x][current->position.y]->cost;
+              Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->cost = Maze[current->position.x][current->position.y]->cost + 1;
 
               queue.push_back(Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]);
             }
@@ -185,6 +185,27 @@ namespace SolvingAlgorithms {
             }
       }
     }
+  }
+
+  void printPath(UserInterface::Point::Point* Maze[][112], UserInterface::Position finish) {
+    vector<UserInterface::Point::Point*> path;
+
+    UserInterface::Point::Point* current = Maze[finish.y][finish.x];
+    while (current) {
+      path.push_back(current);
+      current = current->prev;
+    }
+
+    for (int i = path.size() - 1; i >= 0; i--){
+      Utility::setConsoleCursorPosition(path.at(i)->position.y + 4, path.at(i)->position.x + 2);
+      Utility::setConsoleTextColor("FOREGROUND_GREEN");
+      printf("%c", Globals::BLOCK_PIECE);
+      Utility::setConsoleTextColor("FOREGROUND_WHITE");
+
+      Sleep(10);
+    }
+
+    while (true);
   }
 }
 

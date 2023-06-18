@@ -11,6 +11,8 @@ namespace SolvingAlgorithms {
   void dijkstra(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish);
 
   void aStar(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish);
+
+  void printPath(UserInterface::Point::Point* Maze[][112], UserInterface::Position finish);
 }
 
 #endif

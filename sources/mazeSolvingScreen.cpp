@@ -250,12 +250,12 @@ namespace MazeSolvingScreen {
     }
   }
 
-  void initializeMaze(){
+  void initializeMaze() {
     for (int i = 0; i < H; i++)
       for (int j = 0; j < W; j++) Maze[i][j] = UserInterface::Point::createPoint(i, j);
   }
 
-  void animateRawMaze(){
+  void animateRawMaze() {
     for (int i = 0; i < H; i++){
       Utility::setConsoleCursorPosition(3, 2 + i);
       for (int j = 0; j < W; j++) printf("%c", Globals::BLOCK_PIECE);
@@ -325,8 +325,7 @@ namespace MazeSolvingScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       SolvingAlgorithms::BFS(Maze, start, finish);
-
-      Utility::setConsoleCursorPosition(0, 0);
+      SolvingAlgorithms::printPath(Maze, finish);
 
       return true;
     } else if (UserInterface::isCursorInButton(btn2, cursorPosition)) {
@@ -334,6 +333,7 @@ namespace MazeSolvingScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       SolvingAlgorithms::DFS(Maze, start, finish);
+      SolvingAlgorithms::printPath(Maze, finish);
 
       return true;
     } else if (UserInterface::isCursorInButton(btn3, cursorPosition)) {
@@ -341,6 +341,7 @@ namespace MazeSolvingScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       SolvingAlgorithms::dijkstra(Maze, start, finish);
+      SolvingAlgorithms::printPath(Maze, finish);
 
       return true;
     } else if (UserInterface::isCursorInButton(btn4, cursorPosition)) {
@@ -348,6 +349,7 @@ namespace MazeSolvingScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       SolvingAlgorithms::aStar(Maze, start, finish);
+      SolvingAlgorithms::printPath(Maze, finish);
 
       return true;
     }
