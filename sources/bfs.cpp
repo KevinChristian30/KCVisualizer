@@ -28,7 +28,7 @@ namespace BFS {
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
       Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
-      printf("%c", Globals::BLOCK);
+      printf("%c", Globals::BLOCK_PIECE);
       Sleep(5);
 
       for (int i = 0; i < 4; i++) {

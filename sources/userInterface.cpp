@@ -35,32 +35,32 @@ namespace UserInterface {
 
   void renderButton(UserInterface::Button button) {
     Utility::setConsoleCursorPosition(button.position.x, button.position.y);
-    printf("%c", Globals::TOPLEFTPIECE);
+    printf("%c", Globals::TOP_LEFT_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x + 1, button.position.y);
-    for (short i = 0; i < 20; i++) printf("%c", Globals::HORIZONTALPIECE);
+    for (short i = 0; i < 20; i++) printf("%c", Globals::HORIZONTAL_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x + 21, button.position.y);
-    printf("%c", Globals::TOPRIGHTPIECE);
+    printf("%c", Globals::TOP_RIGHT_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x, button.position.y + 1);
-    printf("%c", Globals::VERTICALPIECE);
+    printf("%c", Globals::VERTICAL_PIECE);
 
     size_t length = strlen(button.text);
     for (int i = 0; i < (20 - length) / 2; i++) printf(" ");
     printf("%s", button.text);
 
     Utility::setConsoleCursorPosition(button.position.x + 21, button.position.y + 1);
-    printf("%c", Globals::VERTICALPIECE);
+    printf("%c", Globals::VERTICAL_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x, button.position.y + 2);
-    printf("%c", Globals::BOTTOMLEFTPIECE);
+    printf("%c", Globals::BOTTOM_LEFT_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x + 1, button.position.y + 2);
-    for (short i = 0; i < 20; i++) printf("%c", Globals::HORIZONTALPIECE);
+    for (short i = 0; i < 20; i++) printf("%c", Globals::HORIZONTAL_PIECE);
 
     Utility::setConsoleCursorPosition(button.position.x + 21, button.position.y + 2);
-    printf("%c", Globals::BOTTOMRIGHTPIECE);
+    printf("%c", Globals::BOTTOM_RIGHT_PIECE);
   };
 
  bool isCursorInButton(Button button, COORD cursorPosition) {
@@ -84,7 +84,7 @@ namespace UserInterface {
       Point* newPoint = (Point*) malloc(sizeof(Point));
       
       newPoint->position = { x, y };
-      newPoint->symbol = Globals::TemplateMaze[x][y];
+      newPoint->symbol = Globals::TEMPLATE_MAZE[x][y];
       newPoint->cost = INT_MAX;
       newPoint->visited = false;
       newPoint->prev = NULL;

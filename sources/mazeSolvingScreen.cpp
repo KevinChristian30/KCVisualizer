@@ -63,10 +63,10 @@ namespace MazeSolvingScreen {
 
           Utility::setConsoleTextColor("FOREGROUND_BLUE");
           Utility::setConsoleCursorPosition(posY + 4 + Globals::dirY[order[i]], posX + 2 + Globals::dirX[order[i]]);
-          printf("%c", Globals::BLOCK);
+          printf("%c", Globals::BLOCK_PIECE);
 
           Utility::setConsoleCursorPosition(posY + 4, posX + 2);
-          printf("%c", Globals::BLOCK);
+          printf("%c", Globals::BLOCK_PIECE);
           Sleep(5);
           Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
@@ -95,7 +95,7 @@ namespace MazeSolvingScreen {
       for (int i = 0; i < frontiers.size(); i++){
         Utility::setConsoleCursorPosition(frontiers.at(i)->position.y + 4, frontiers.at(i)->position.x + 2);
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
         Utility::setConsoleTextColor("FOREGROUND_WHITE");
       }
     }
@@ -208,11 +208,11 @@ namespace MazeSolvingScreen {
 
         Utility::setConsoleTextColor("FOREGROUND_BLUE");
         Utility::setConsoleCursorPosition(4 + current->position.y + Globals::dirY[order[i]], 2 + current->position.x + Globals::dirX[order[i]]);
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
         Sleep(1);
 
         Utility::setConsoleCursorPosition(4 + current->position.y + 2 * Globals::dirY[order[i]], 2 + current->position.x + 2 * Globals::dirX[order[i]]);
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
         Sleep(1);
         Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
@@ -258,7 +258,7 @@ namespace MazeSolvingScreen {
   void animateRawMaze(){
     for (int i = 0; i < H; i++){
       Utility::setConsoleCursorPosition(3, 2 + i);
-      for (int j = 0; j < W; j++) printf("%c", Globals::BLOCK);
+      for (int j = 0; j < W; j++) printf("%c", Globals::BLOCK_PIECE);
       Sleep(10);
     }
   }
@@ -377,7 +377,7 @@ namespace MazeSolvingScreen {
 
         Utility::setConsoleTextColor("FOREGROUND_GREEN");
         Utility::setConsoleCursorPosition(startCursorPosition.X, startCursorPosition.Y);
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
 
         numberOfPointsSelected++;
       } else {
@@ -387,7 +387,7 @@ namespace MazeSolvingScreen {
 
         Utility::setConsoleTextColor("FOREGROUND_RED");
         Utility::setConsoleCursorPosition(finishCursorPosition.X, finishCursorPosition.Y);
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
 
         numberOfPointsSelected++;
       }

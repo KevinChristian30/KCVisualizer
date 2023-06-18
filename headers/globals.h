@@ -4,24 +4,24 @@
 #define GLOBALS
 
 namespace Globals {
-  const HANDLE INPUTHANDLE = GetStdHandle(STD_INPUT_HANDLE);
-  const HANDLE OUTPUTHANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
+  const HANDLE INPUT_HANDLE = GetStdHandle(STD_INPUT_HANDLE);
+  const HANDLE OUTPUT_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
 
   const short INPUT_BUFFER_SIZE = 128;
 
   const short WIDTH = 115;
   const short HEIGHT = 27;
 
-  const short HORIZONTALPIECE = 205;
-  const short VERTICALPIECE = 186;
-  const short TOPLEFTPIECE = 201;
-  const short TOPRIGHTPIECE = 187;
-  const short BOTTOMLEFTPIECE = 200;
-  const short BOTTOMRIGHTPIECE = 188;
+  const short HORIZONTAL_PIECE = 205;
+  const short VERTICAL_PIECE = 186;
+  const short TOP_LEFT_PIECE = 201;
+  const short TOP_RIGHT_PIECE = 187;
+  const short BOTTOM_LEFT_PIECE = 200;
+  const short BOTTOM_RIGHT_PIECE = 188;
 
-  const short BLOCK = 219;
+  const short BLOCK_PIECE = 219;
 
-  const char TemplateMaze[200][200] = {
+  const char TEMPLATE_MAZE[200][200] = {
     "###############################################################################################################",
     "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #",
     "###############################################################################################################",
@@ -45,8 +45,8 @@ namespace Globals {
     "###############################################################################################################",
   };
 
-  const short dirX[] = {0, 1, 0, -1};
-  const short dirY[] = {-1, 0, 1, 0};
+  const short dirX[] = { 0, 1, 0, -1 };
+  const short dirY[] = { -1, 0, 1, 0 };
 }
 
 #endif

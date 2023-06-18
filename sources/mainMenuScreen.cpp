@@ -68,42 +68,42 @@ namespace MainMenuScreen {
     for (size_t i = 0; i < 7; i++){
       Sleep(delay);
       Utility::setConsoleCursorPosition(X - 2, 5 + i);
-      printf("%c", Globals::VERTICALPIECE);
+      printf("%c", Globals::VERTICAL_PIECE);
     }
 
     Sleep(delay);
     Utility::setConsoleCursorPosition(X - 2, 12);
-    printf("%c", Globals::BOTTOMLEFTPIECE);
+    printf("%c", Globals::BOTTOM_LEFT_PIECE);
 
     for (size_t i = 1; i <= 59; i++){
       Sleep(delay);
       Utility::setConsoleCursorPosition(X - 2 + i, 12);
-      printf("%c", Globals::HORIZONTALPIECE);
+      printf("%c", Globals::HORIZONTAL_PIECE);
     }
 
     Sleep(delay);
     Utility::setConsoleCursorPosition(X - 2 + 59, 12);
-    printf("%c", Globals::BOTTOMRIGHTPIECE);
+    printf("%c", Globals::BOTTOM_RIGHT_PIECE);
 
     for (short i = 6; i >= 0; i--){
       Sleep(delay);
       Utility::setConsoleCursorPosition(X - 2 + 59, 5 + i);
-      printf("%c", Globals::VERTICALPIECE);
+      printf("%c", Globals::VERTICAL_PIECE);
     }
 
     Sleep(delay);
     Utility::setConsoleCursorPosition(X - 2 + 59, 4);
-    printf("%c", Globals::TOPRIGHTPIECE);
+    printf("%c", Globals::TOP_RIGHT_PIECE);
 
     for (size_t i = 59; i > 1; i--){
       Sleep(delay);
       Utility::setConsoleCursorPosition(X - 3 + i, 4);
-      printf("%c", Globals::HORIZONTALPIECE);
+      printf("%c", Globals::HORIZONTAL_PIECE);
     }
 
     Sleep(delay);
     Utility::setConsoleCursorPosition(X - 2, 4);
-    printf("%c", Globals::TOPLEFTPIECE);
+    printf("%c", Globals::TOP_LEFT_PIECE);
 
     Utility::setConsoleTextColor("FOREGROUND_GREEN");
     for (size_t i = 0; i < 6; i++){

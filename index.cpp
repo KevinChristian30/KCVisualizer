@@ -12,23 +12,23 @@ void setRandomNumberSeed() {
 
 void enableWindowAndMouseInputEvents() {
   DWORD mode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
-  SetConsoleMode(Globals::INPUTHANDLE, mode);
+  SetConsoleMode(Globals::INPUT_HANDLE, mode);
 }
 
 void disableLeftClickConsolePause() {
   DWORD prevMode;
-  GetConsoleMode(Globals::INPUTHANDLE, &prevMode);
+  GetConsoleMode(Globals::INPUT_HANDLE, &prevMode);
 
-  SetConsoleMode(Globals::INPUTHANDLE, prevMode & ENABLE_EXTENDED_FLAGS);
+  SetConsoleMode(Globals::INPUT_HANDLE, prevMode & ENABLE_EXTENDED_FLAGS);
 }
 
 void hideCursor() {
   CONSOLE_CURSOR_INFO cci;
   
-  GetConsoleCursorInfo(Globals::OUTPUTHANDLE, &cci);
+  GetConsoleCursorInfo(Globals::OUTPUT_HANDLE, &cci);
   cci.bVisible = FALSE;
 
-  SetConsoleCursorInfo(Globals::OUTPUTHANDLE, &cci);
+  SetConsoleCursorInfo(Globals::OUTPUT_HANDLE, &cci);
 }
 
 void initializeApp() {

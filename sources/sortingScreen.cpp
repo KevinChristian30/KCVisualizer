@@ -42,7 +42,7 @@ namespace SortingScreen {
       for (auto i = 0; i < bar.height; i++) {
         Sleep(delay);
         Utility::setConsoleCursorPosition(bar.xPos, bar.yPos - i);
-        printf("%c", Globals::BLOCK);
+        printf("%c", Globals::BLOCK_PIECE);
       }
     }
 
