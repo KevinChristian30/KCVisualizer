@@ -63,7 +63,7 @@ namespace UserInterface {
     printf("%c", Globals::BOTTOMRIGHTPIECE);
   };
 
- bool isPointerInButtonPixelPosition(Button button, COORD cursorPosition) {
+ bool isCursorInButton(Button button, COORD cursorPosition) {
     return 
       cursorPosition.X >= button.position.x && 
       cursorPosition.X <= button.position.x + 22 &&

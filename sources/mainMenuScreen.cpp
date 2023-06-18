@@ -126,23 +126,20 @@ namespace MainMenuScreen {
     UserInterface::renderButton(btnExit);
   }
 
-  /**
-   * @Returns true if a button is clicked
-  */
   bool handleClick(COORD cursorPosition) {
-    if (UserInterface::isPointerInButtonPixelPosition(btnTSP, cursorPosition)){
+    if (UserInterface::isCursorInButton(btnTSP, cursorPosition)){
       TSPScreen::show();
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnSorting, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnSorting, cursorPosition)){
       SortingScreen::show();
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnMazeSolving, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnMazeSolving, cursorPosition)){
       MazeSolvingScreen::show();
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnSandBox, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnSandBox, cursorPosition)){
       SandboxScreen::show();
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnExit, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnExit, cursorPosition)){
       ExitScreen::show();
       return true;
     }
@@ -150,9 +147,6 @@ namespace MainMenuScreen {
     return false;
   }
 
-  /**
-   * @Returns true if a button is clicked
-  */
   bool setEventHandlers() {
     COORD cursorPosition = Utility::UI::waitForLeftClick();
 
@@ -161,16 +155,14 @@ namespace MainMenuScreen {
 
   void show() {
     initializeUIElements();
-    fflush(stdin);
-    fflush(stdout);
 
     while (true) {
       displayUIElements();
       
-      if (setEventHandlers()) {
-        Utility::clearScreen();
-        Utility::setConsoleTextColor("FOREGROUND_WHITE");  
-      }
+      if (!setEventHandlers()) continue;
+      
+      Utility::clearScreen();
+      Utility::setConsoleTextColor("FOREGROUND_WHITE");  
     }
   }
 }

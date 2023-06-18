@@ -10,10 +10,6 @@ void setRandomNumberSeed() {
   srand(time(0));
 }
 
-void saveConsoleMode() {
-  // GetConsoleMode(Globals::INPUTHANDLE, &Globals::OLDCONSOLEMODE);
-}
-
 void enableWindowAndMouseInputEvents() {
   DWORD mode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
   SetConsoleMode(Globals::INPUTHANDLE, mode);
@@ -38,7 +34,6 @@ void hideCursor() {
 void initializeApp() {
   setRandomNumberSeed();
 
-  saveConsoleMode();
   disableLeftClickConsolePause();
   enableWindowAndMouseInputEvents();
   hideCursor();

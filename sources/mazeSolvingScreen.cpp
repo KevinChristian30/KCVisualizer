@@ -324,7 +324,7 @@ namespace MazeSolvingScreen {
   }
 
   bool handleSolveClick(COORD cursorPosition) {
-    if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
+    if (UserInterface::isCursorInButton(btnRecursiveBacktracking, cursorPosition)) {
       int startX, startY, finishX, finishY;
       
       UserInterface::Position start = { (short) (startCursorPosition.X - 4), (short) (startCursorPosition.Y - 2) };
@@ -335,13 +335,13 @@ namespace MazeSolvingScreen {
       Utility::setConsoleCursorPosition(0, 0);
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnPrim, cursorPosition)) {
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnKruskal, cursorPosition)) {
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnBack, cursorPosition)) {
       return true;
     }
 
@@ -395,7 +395,7 @@ namespace MazeSolvingScreen {
   }
 
   bool handleClick(COORD cursorPosition) {
-    if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
+    if (UserInterface::isCursorInButton(btnRecursiveBacktracking, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -408,7 +408,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnPrim, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -421,7 +421,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnKruskal, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
 
@@ -434,7 +434,7 @@ namespace MazeSolvingScreen {
       while (!setSolveEventHandler());
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
+    } else if (UserInterface::isCursorInButton(btnBack, cursorPosition)) {
       return true;
     }
 

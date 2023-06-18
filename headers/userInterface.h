@@ -32,7 +32,7 @@ namespace UserInterface {
 
   void renderButton(Button button);
 
-  bool isPointerInButtonPixelPosition(Button button, COORD cursorPosition);
+  bool isCursorInButton(Button button, COORD cursorPosition);
 
   namespace Point {
     struct Point {

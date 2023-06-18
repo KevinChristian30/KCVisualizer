@@ -316,7 +316,12 @@ namespace SortingScreen {
     Utility::UI::animateOuterBorder(0);
     Utility::UI::animateInnerBorder(0);
 
+    Utility::setConsoleCursorPosition(50, 25);
+    printf("Randomizing Bars");
+
     Bar::animateRandomizedBars(bars);
+
+    Utility::UI::clearButtons();
 
     UserInterface::renderButton(btnQuickSort);
     UserInterface::renderButton(btnMergeSort);
@@ -341,14 +346,14 @@ namespace SortingScreen {
 
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
-    Utility::setConsoleCursorPosition(X + 22, Y);
+    Utility::setConsoleCursorPosition(X + 20, Y);
     Utility::animateString("Sorted! Click Anywhere to Continue", 5);
 
     Utility::UI::waitForLeftClick();
   }
 
   bool handleClick(COORD cursorPosition) {
-    if (UserInterface::isPointerInButtonPixelPosition(btnQuickSort, cursorPosition)){
+    if (UserInterface::isCursorInButton(btnQuickSort, cursorPosition)){
       Utility::UI::clearButtons();
       displaySortingStatistics();
 
@@ -358,7 +363,7 @@ namespace SortingScreen {
       waitForLeftClick();
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnMergeSort, cursorPosition)){
       Utility::UI::clearButtons();
       displaySortingStatistics();
 
@@ -368,7 +373,7 @@ namespace SortingScreen {
       waitForLeftClick();
       
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnHeapSort, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnHeapSort, cursorPosition)){
       Bar::Bar *toSort = (Bar::Bar*) malloc(120 * sizeof(Bar::Bar));
       for (size_t i = 4; i < 113; i++){
         toSort[i - 4].xPos = bars[i].xPos;
@@ -386,7 +391,7 @@ namespace SortingScreen {
       free(toSort);
 
       return true;
-    } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)){
+    } else if (UserInterface::isCursorInButton(btnBack, cursorPosition)){
       return true;
     }
 
