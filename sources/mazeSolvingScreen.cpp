@@ -67,7 +67,7 @@ namespace MazeSolvingScreen {
 
           Utility::setConsoleCursorPosition(posY + 4, posX + 2);
           printf("%c", Globals::BLOCK_PIECE);
-          // Sleep(5);
+          Sleep(5);
           Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
           recursiveBacktracking(Maze, posX + (2 * Globals::dirX[order[i]]), posY + (2 * Globals::dirY[order[i]]));
@@ -86,7 +86,7 @@ namespace MazeSolvingScreen {
       directions.clear();
       directions.shrink_to_fit();
 
-      // Sleep(5);
+      Sleep(5);
     }
   }
 
@@ -299,10 +299,33 @@ namespace MazeSolvingScreen {
     const short X = 29;
     const short Y = 25;
 
-    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    Utility::UI::clearButtons();
 
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
     Utility::setConsoleCursorPosition(X + 22, Y);
     printf("Generating Maze");
+  }
+
+  void displayPathFinding() {
+    const short X = 29;
+    const short Y = 25;
+
+    Utility::UI::clearButtons();
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    Utility::setConsoleCursorPosition(X + 24, Y);
+    printf("Searching");
+  }
+
+  void displayMazeSolved() {
+    const short X = 29;
+    const short Y = 25;
+
+    Utility::UI::clearButtons();
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    Utility::setConsoleCursorPosition(X + 11, Y);
+    Utility::animateString("Path Found, Left Click to Continue", 10);
   }
 
   void displaySolveButtons() {
@@ -324,32 +347,52 @@ namespace MazeSolvingScreen {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
+      displayPathFinding();
       SolvingAlgorithms::BFS(Maze, start, finish);
+
       SolvingAlgorithms::printPath(Maze, finish);
+      displayMazeSolved();
+
+      Utility::UI::waitForLeftClick();
 
       return true;
     } else if (UserInterface::isCursorInButton(btn2, cursorPosition)) {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
+      displayPathFinding();
       SolvingAlgorithms::DFS(Maze, start, finish);
+
       SolvingAlgorithms::printPath(Maze, finish);
+      displayMazeSolved();
+
+      Utility::UI::waitForLeftClick();
 
       return true;
     } else if (UserInterface::isCursorInButton(btn3, cursorPosition)) {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
+      displayPathFinding();
       SolvingAlgorithms::dijkstra(Maze, start, finish);
+
       SolvingAlgorithms::printPath(Maze, finish);
+      displayMazeSolved();
+
+      Utility::UI::waitForLeftClick();
 
       return true;
     } else if (UserInterface::isCursorInButton(btn4, cursorPosition)) {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
+      displayPathFinding();
       SolvingAlgorithms::aStar(Maze, start, finish);
+
       SolvingAlgorithms::printPath(Maze, finish);
+      displayMazeSolved();
+
+      Utility::UI::waitForLeftClick();
 
       return true;
     }

@@ -196,7 +196,11 @@ namespace SolvingAlgorithms {
       current = current->prev;
     }
 
-    for (int i = path.size() - 1; i >= 0; i--){
+    Utility::setConsoleCursorPosition(finish.x + 4, finish.y + 2);
+    Utility::setConsoleTextColor("FOREGROUND_RED");
+    printf("%c", Globals::BLOCK_PIECE);
+
+    for (int i = path.size() - 1; i > 0; i--){
       Utility::setConsoleCursorPosition(path.at(i)->position.y + 4, path.at(i)->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
       printf("%c", Globals::BLOCK_PIECE);
@@ -204,8 +208,6 @@ namespace SolvingAlgorithms {
 
       Sleep(10);
     }
-
-    while (true);
   }
 }
 
