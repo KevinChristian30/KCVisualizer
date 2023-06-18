@@ -1,16 +1,16 @@
+#include <windows.h>
+
 #ifndef GLOBALS
 #define GLOBALS
 
-#include <windows.h>
-
 namespace Globals {
+  const HANDLE INPUTHANDLE = GetStdHandle(STD_INPUT_HANDLE);
   const HANDLE OUTPUTHANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
+
+  const short INPUT_BUFFER_SIZE = 128;
 
   const short WIDTH = 115;
   const short HEIGHT = 27;
-
-  const short SPACEWIDTH = 11;
-  const short SPACEHEIGHT = 24;
 
   const short HORIZONTALPIECE = 205;
   const short VERTICALPIECE = 186;

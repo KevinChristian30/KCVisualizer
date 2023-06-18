@@ -31,7 +31,7 @@ namespace MazeSolvingScreen {
   }
 
   UserInterface::Point::Point* Maze[H + 1][W + 1];
-  POINT startCursorPosition, finishCursorPosition;
+  COORD startCursorPosition, finishCursorPosition;
   
   UserInterface::Button btnRecursiveBacktracking;
   UserInterface::Button btnPrim;
@@ -67,7 +67,7 @@ namespace MazeSolvingScreen {
 
           Utility::setConsoleCursorPosition(posY + 4, posX + 2);
           printf("%c", Globals::BLOCK);
-          // Sleep(5);
+          Sleep(5);
           Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
           recursiveBacktracking(Maze, posX + (2 * Globals::dirX[order[i]]), posY + (2 * Globals::dirY[order[i]]));
@@ -86,7 +86,7 @@ namespace MazeSolvingScreen {
       directions.clear();
       directions.shrink_to_fit();
 
-      // Sleep(5);
+      Sleep(5);
     }
   }
 
@@ -323,100 +323,78 @@ namespace MazeSolvingScreen {
     UserInterface::renderButton(btnBack);
   }
 
-  bool handleSolveClick(POINT cursorPosition) {
+  bool handleSolveClick(COORD cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
       int startX, startY, finishX, finishY;
       
-      Utility::UI::translateCursorPositionToSpaces(startCursorPosition, &startX, &startY);
-      Utility::UI::translateCursorPositionToSpaces(finishCursorPosition, &finishX, &finishY);
-      
-      UserInterface::Position start = { (short) ((startX) - 4), (short) ((startY) - 2) };
-      UserInterface::Position finish = { (short) ((finishX) - 4), (short) ((finishY) - 2) };
+      UserInterface::Position start = { (short) (startCursorPosition.X - 4), (short) (startCursorPosition.Y - 2) };
+      UserInterface::Position finish = { (short) (finishCursorPosition.X - 4), (short) (finishCursorPosition.Y - 2) };
 
       BFS::BFS(Maze, start, finish);
 
       Utility::setConsoleCursorPosition(0, 0);
 
-      while (true);
-
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 
-  void setSolveEventListener() {
-    POINT cursorPosition;
-	  HWND hWnd = GetForegroundWindow();
+  bool setSolveEventHandler() {
+    COORD cursorPosition = Utility::UI::waitForLeftClick();
 
-    while (1) {
-      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-        GetCursorPos(&cursorPosition);
-        ScreenToClient(hWnd, &cursorPosition);
-      
-        if (!handleSolveClick(cursorPosition)) break;
-      }
-    }
+    return handleSolveClick(cursorPosition);
   }
 
-  bool isValidPoint(POINT cursorPosition) {
-    int x, y;
-    Utility::UI::translateCursorPositionToSpaces(cursorPosition, &x, &y);
-
-    if (x < 4 || x > Globals::WIDTH - 3 || y < 2 || y > Globals::HEIGHT - 5) 
+  bool isValidPosition(COORD cursorPosition) {
+    if (cursorPosition.X < 4 || 
+        cursorPosition.X > Globals::WIDTH - 3 || 
+        cursorPosition.Y < 2 || 
+        cursorPosition.Y > Globals::HEIGHT - 5) 
       return false;
 
-    if (Maze[y - 2][x - 4]->symbol == '#') return false;
+    if (Maze[cursorPosition.Y - 2][cursorPosition.X - 4]->symbol == '#') return false;
 
     return true;
   }
 
   void waitForStartingAndEndingPointInputs() {
-	  HWND hWnd = GetForegroundWindow();
-
     int numberOfPointsSelected = 0;
+
     while (numberOfPointsSelected < 2) {
-      if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-        if (numberOfPointsSelected == 0) {
-          GetCursorPos(&startCursorPosition);
-          ScreenToClient(hWnd, &startCursorPosition);
-          if (isValidPoint(startCursorPosition)) {
-            int x, y;
-            Utility::UI::translateCursorPositionToSpaces(startCursorPosition, &x, &y);
-            
-            Utility::setConsoleTextColor("FOREGROUND_GREEN");
-            Utility::setConsoleCursorPosition(x, y);
-            printf("%c", Globals::BLOCK);
+      if (numberOfPointsSelected == 0) {
+        startCursorPosition = Utility::UI::waitForLeftClick();
 
-            numberOfPointsSelected++;
-          }
-        } else {
-          GetCursorPos(&finishCursorPosition);
-          ScreenToClient(hWnd, &finishCursorPosition);
-          if (isValidPoint(finishCursorPosition)) {
-            int x, y;
-            Utility::UI::translateCursorPositionToSpaces(finishCursorPosition, &x, &y);
-            
-            Utility::setConsoleTextColor("FOREGROUND_RED");
-            Utility::setConsoleCursorPosition(x, y);
-            printf("%c", Globals::BLOCK);
+        if (!isValidPosition(startCursorPosition)) continue;
 
-            numberOfPointsSelected++;
-          }
-        }
+        Utility::setConsoleTextColor("FOREGROUND_GREEN");
+        Utility::setConsoleCursorPosition(startCursorPosition.X, startCursorPosition.Y);
+        printf("%c", Globals::BLOCK);
+
+        numberOfPointsSelected++;
+      } else {
+        finishCursorPosition = Utility::UI::waitForLeftClick();
+
+        if (!isValidPosition(finishCursorPosition)) continue;
+
+        Utility::setConsoleTextColor("FOREGROUND_RED");
+        Utility::setConsoleCursorPosition(finishCursorPosition.X, finishCursorPosition.Y);
+        printf("%c", Globals::BLOCK);
+
+        numberOfPointsSelected++;
       }
     }
   }
 
-  bool handleClick(POINT cursorPosition) {
+  bool handleClick(COORD cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnRecursiveBacktracking, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -427,9 +405,9 @@ namespace MazeSolvingScreen {
       waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      setSolveEventListener();
+      while (!setSolveEventHandler());
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnPrim, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -440,9 +418,9 @@ namespace MazeSolvingScreen {
       waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      setSolveEventListener();
+      while (!setSolveEventHandler());
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnKruskal, cursorPosition)) {
       Utility::UI::clearButtons();
       displayGeneratingView();
@@ -453,28 +431,20 @@ namespace MazeSolvingScreen {
       waitForStartingAndEndingPointInputs();
       displaySolveButtons();
 
-      setSolveEventListener();
+      while (!setSolveEventHandler());
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   bool setEventHandlers() {
-    POINT cursorPosition;
-	  HWND hWnd = GetForegroundWindow();
+    COORD cursorPosition = Utility::UI::waitForLeftClick();
 
-    if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-      GetCursorPos(&cursorPosition);
-      ScreenToClient(hWnd, &cursorPosition);
-    
-      if (!handleClick(cursorPosition)) return false;
-    }
-
-    return true;
+    return handleClick(cursorPosition);
   }
 
   void show() {
@@ -483,7 +453,7 @@ namespace MazeSolvingScreen {
     initializeUIElements();
     displayUIElements();
 
-    while (setEventHandlers());
+    while (!setEventHandlers());
   }
 }
 

@@ -16,7 +16,7 @@ namespace Utility {
   
     void clearButtons();
 
-    void translateCursorPositionToSpaces(POINT cursorPosition, int *x, int *y);
+    COORD waitForLeftClick();
   }
 }
 

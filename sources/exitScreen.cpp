@@ -34,7 +34,9 @@ namespace ExitScreen {
     Utility::UI::animateOuterBorder(0);
     displayExitMessage();
 
-    while (true) if (GetAsyncKeyState(VK_LBUTTON) & 1) exit(0);
+    Utility::UI::waitForLeftClick();
+
+    exit(0);
   }
 }
 

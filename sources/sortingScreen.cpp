@@ -344,10 +344,10 @@ namespace SortingScreen {
     Utility::setConsoleCursorPosition(X + 22, Y);
     Utility::animateString("Sorted! Click Anywhere to Continue", 5);
 
-    while (true) if (GetAsyncKeyState(VK_LBUTTON) & 1) break;
+    Utility::UI::waitForLeftClick();
   }
 
-  bool handleClick(POINT cursorPosition) {
+  bool handleClick(COORD cursorPosition) {
     if (UserInterface::isPointerInButtonPixelPosition(btnQuickSort, cursorPosition)){
       Utility::UI::clearButtons();
       displaySortingStatistics();
@@ -357,7 +357,7 @@ namespace SortingScreen {
 
       waitForLeftClick();
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnMergeSort, cursorPosition)){
       Utility::UI::clearButtons();
       displaySortingStatistics();
@@ -367,7 +367,7 @@ namespace SortingScreen {
 
       waitForLeftClick();
       
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnHeapSort, cursorPosition)){
       Bar::Bar *toSort = (Bar::Bar*) malloc(120 * sizeof(Bar::Bar));
       for (size_t i = 4; i < 113; i++){
@@ -385,26 +385,18 @@ namespace SortingScreen {
       waitForLeftClick();
       free(toSort);
 
-      return false;
+      return true;
     } else if (UserInterface::isPointerInButtonPixelPosition(btnBack, cursorPosition)){
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   bool setEventHandlers() {
-    POINT cursorPosition;
-	  HWND hWnd = GetForegroundWindow();
+    COORD cursorPosition = Utility::UI::waitForLeftClick();
 
-    if (GetAsyncKeyState(VK_LBUTTON) & 1) {
-      GetCursorPos(&cursorPosition);
-      ScreenToClient(hWnd, &cursorPosition);
-    
-      if (!handleClick(cursorPosition)) return false;
-    }
-
-    return true;
+    return handleClick(cursorPosition);
   }
 
   void show() {
@@ -413,7 +405,7 @@ namespace SortingScreen {
     initializeUIElements();
     displayUIElements();
     
-    while (setEventHandlers());
+    while (!setEventHandlers());
 
     free(bars);
   }

@@ -3,7 +3,6 @@
 
 namespace SandboxScreen {
   void show() {
-    
   }
 }
 

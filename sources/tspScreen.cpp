@@ -5,8 +5,6 @@
 
 namespace TSPScreen {
   void show() {
-    Utility::clearScreen();
-    Utility::UI::animateOuterBorder(0);
   }
 }
 

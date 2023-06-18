@@ -1,6 +1,8 @@
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
 
+#include <windows.h>
+
 #include "./globals.h"
 
 namespace UserInterface {
@@ -30,7 +32,7 @@ namespace UserInterface {
 
   void renderButton(Button button);
 
-  bool isPointerInButtonPixelPosition(Button button, POINT cursorPosition);
+  bool isPointerInButtonPixelPosition(Button button, COORD cursorPosition);
 
   namespace Point {
     struct Point {

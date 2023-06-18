@@ -2,44 +2,46 @@
 #include <windows.h>
 #include <time.h>
 
-#include "headers/utility.h"
 #include "headers/loadingScreen.h"
 #include "headers/mainMenuScreen.h"
-
-void hideCursor() {
-  HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-  CONSOLE_CURSOR_INFO cci;
-  
-  GetConsoleCursorInfo(hOut, &cci);
-  cci.bVisible = FALSE;
-
-  SetConsoleCursorInfo(hOut, &cci);
-}
-
-void disableLeftClickConsolePause() {
-  HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
-  DWORD prevMode;
-
-  GetConsoleMode(hInput, &prevMode);
-  SetConsoleMode(hInput, prevMode & ENABLE_EXTENDED_FLAGS);
-}
+#include "headers/globals.h"
 
 void setRandomNumberSeed() {
   srand(time(0));
 }
 
-void disableResize() {
-  HWND consoleWindow = GetConsoleWindow();
-  LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
-  style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX);
-  SetWindowLong(consoleWindow, GWL_STYLE, style);
+void saveConsoleMode() {
+  // GetConsoleMode(Globals::INPUTHANDLE, &Globals::OLDCONSOLEMODE);
+}
+
+void enableWindowAndMouseInputEvents() {
+  DWORD mode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
+  SetConsoleMode(Globals::INPUTHANDLE, mode);
+}
+
+void disableLeftClickConsolePause() {
+  DWORD prevMode;
+  GetConsoleMode(Globals::INPUTHANDLE, &prevMode);
+
+  SetConsoleMode(Globals::INPUTHANDLE, prevMode & ENABLE_EXTENDED_FLAGS);
+}
+
+void hideCursor() {
+  CONSOLE_CURSOR_INFO cci;
+  
+  GetConsoleCursorInfo(Globals::OUTPUTHANDLE, &cci);
+  cci.bVisible = FALSE;
+
+  SetConsoleCursorInfo(Globals::OUTPUTHANDLE, &cci);
 }
 
 void initializeApp() {
-  hideCursor();
-  disableLeftClickConsolePause();
   setRandomNumberSeed();
-  disableResize();
+
+  saveConsoleMode();
+  disableLeftClickConsolePause();
+  enableWindowAndMouseInputEvents();
+  hideCursor();
 }
 
 int main() {

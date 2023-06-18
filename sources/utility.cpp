@@ -6,19 +6,10 @@
 #include <windows.h>
 
 #include "../headers/globals.h"
-#include "../headers/utility.h"
 
 namespace Utility {
   #define FOREGROUND_WHITE 0x07
   #define FOREGROUND_LIGHTBLUE 0x09
-
-  void clearScreen() {
-    #ifdef _WIN32
-      system("cls");
-    #else
-      system("clear");
-    #endif
-  }
 
   void setConsoleCursorPosition(short x, short y) {
     COORD targetPosition = {x, y};
@@ -45,8 +36,18 @@ namespace Utility {
     }
   }
 
+  void clearScreen() {
+    setConsoleCursorPosition(0, 0);
+
+    for (int i = 0; i < Globals::HEIGHT; i++) {
+      printf("                                                                                                                   \n");
+    }
+  }
+
   namespace UI {
     void animateOuterBorder(short delay) {
+      setConsoleCursorPosition(0, 0);
+
       printf("%c", Globals::TOPLEFTPIECE); 
       for (int i = 1; i <= Globals::WIDTH; i++){
         Sleep(delay);
@@ -130,9 +131,30 @@ namespace Utility {
       }
     }
   
-    void translateCursorPositionToSpaces(POINT cursorPosition, int *x, int *y) {
-      *x = cursorPosition.x / Globals::SPACEWIDTH;
-      *y = cursorPosition.y / Globals::SPACEHEIGHT;
+    COORD waitForLeftClick() {
+      DWORD NUMBER_OF_EVENTS_READ;
+      INPUT_RECORD INPUT_BUFFER[Globals::INPUT_BUFFER_SIZE];
+
+      int counter;
+      while (true) {
+        counter = 0;
+
+        while (counter++ <= 100) {
+          ReadConsoleInput(Globals::INPUTHANDLE, INPUT_BUFFER, Globals::INPUT_BUFFER_SIZE, &NUMBER_OF_EVENTS_READ);
+
+          for (int i = 0; i < NUMBER_OF_EVENTS_READ; i++) {
+            if (INPUT_BUFFER[i].EventType == MOUSE_EVENT) {
+              MOUSE_EVENT_RECORD event = INPUT_BUFFER[i].Event.MouseEvent;
+
+              if (event.dwEventFlags != 0) continue;
+              if (event.dwButtonState != FROM_LEFT_1ST_BUTTON_PRESSED) continue;
+
+              COORD cursorPosition = { event.dwMousePosition.X, event.dwMousePosition.Y };
+              return cursorPosition;
+            }
+          }
+        }
+      }
     }
   }
 }
