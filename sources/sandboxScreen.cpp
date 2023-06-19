@@ -106,6 +106,17 @@ namespace SandboxScreen {
     Utility::animateString("Path Found, Left Click to Continue", 10);
   }
 
+  void displayMazeNotSolvable() {
+    const short X = 29;
+    const short Y = 25;
+
+    Utility::UI::clearButtons();
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    Utility::setConsoleCursorPosition(X + 17, Y);
+    Utility::animateString("Path Can't be Found", 10);
+  }
+
   void displaySolveButtons() {
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
@@ -120,6 +131,28 @@ namespace SandboxScreen {
     UserInterface::renderButton(btn4);
   }
 
+  bool isValidPosition(COORD cursorPosition) {
+    if (cursorPosition.X < 4 || 
+        cursorPosition.X > Globals::WIDTH - 3 || 
+        cursorPosition.Y < 2 || 
+        cursorPosition.Y > Globals::HEIGHT - 5) 
+      return false;
+
+    if (Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol == '#') return false;
+
+    return true;
+  }
+
+  bool isInBound(COORD cursorPosition) {
+    if (cursorPosition.X < 4 || 
+        cursorPosition.X > Globals::WIDTH - 3 || 
+        cursorPosition.Y < 2 || 
+        cursorPosition.Y > Globals::HEIGHT - 5) 
+      return false;
+
+    return true;
+  }
+
   bool handleClick(COORD cursorPosition) {
     if (UserInterface::isCursorInButton(btn1, cursorPosition)) {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
@@ -131,8 +164,12 @@ namespace SandboxScreen {
       displayPathFinding();
       SolvingAlgorithms::BFS(Maze, start, finish, 3);
 
-      SolvingAlgorithms::printPath(Maze, finish, 3);
-      displayMazeSolved();
+      if (Maze[finish.y][finish.x]->visited) {
+        SolvingAlgorithms::printPath(Maze, finish, 3);
+        displayMazeSolved();
+      } else {
+        displayMazeNotSolvable();
+      }
 
       Utility::UI::waitForLeftClick();
 
@@ -147,8 +184,12 @@ namespace SandboxScreen {
       displayPathFinding();
       SolvingAlgorithms::DFS(Maze, start, finish, 3);
 
-      SolvingAlgorithms::printPath(Maze, finish, 3);
-      displayMazeSolved();
+      if (Maze[finish.y][finish.x]->visited) {
+        SolvingAlgorithms::printPath(Maze, finish, 3);
+        displayMazeSolved();
+      } else {
+        displayMazeNotSolvable();
+      }
 
       Utility::UI::waitForLeftClick();
 
@@ -163,8 +204,12 @@ namespace SandboxScreen {
       displayPathFinding();
       SolvingAlgorithms::dijkstra(Maze, start, finish, 3);
 
-      SolvingAlgorithms::printPath(Maze, finish, 3);
-      displayMazeSolved();
+      if (Maze[finish.y][finish.x]->visited) {
+        SolvingAlgorithms::printPath(Maze, finish, 3);
+        displayMazeSolved();
+      } else {
+        displayMazeNotSolvable();
+      }
 
       Utility::UI::waitForLeftClick();
 
@@ -179,27 +224,31 @@ namespace SandboxScreen {
       displayPathFinding();
       SolvingAlgorithms::aStar(Maze, start, finish, 3);
 
-      SolvingAlgorithms::printPath(Maze, finish, 3);
-      displayMazeSolved();
+      if (Maze[finish.y][finish.x]->visited) {
+        SolvingAlgorithms::printPath(Maze, finish, 3);
+        displayMazeSolved();
+      } else {
+        displayMazeNotSolvable();
+      }
 
       Utility::UI::waitForLeftClick();
 
       return true;
+    } else if (isInBound(cursorPosition)) {
+      if (Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol == ' ') {
+        Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol = '#';
+        Utility::setConsoleCursorPosition(cursorPosition.X, cursorPosition.Y);
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+        printf("%c", Globals::BLOCK_PIECE);
+      } else {
+        Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol = ' ';
+        Utility::setConsoleCursorPosition(cursorPosition.X, cursorPosition.Y);
+        Utility::setConsoleTextColor("FOREGROUND_WHITE");
+        printf(" ");
+      }
     }
 
     return false;
-  }
-
-  bool isValidPosition(COORD cursorPosition) {
-    if (cursorPosition.X < 4 || 
-        cursorPosition.X > Globals::WIDTH - 3 || 
-        cursorPosition.Y < 2 || 
-        cursorPosition.Y > Globals::HEIGHT - 5) 
-      return false;
-
-    if (Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol == '#') return false;
-
-    return true;
   }
 
   void waitForStartingAndEndingPointInputs() {
