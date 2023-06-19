@@ -144,10 +144,10 @@ namespace SandboxScreen {
   }
 
   bool isInBound(COORD cursorPosition) {
-    if (cursorPosition.X < 4 || 
-        cursorPosition.X > Globals::WIDTH - 3 || 
-        cursorPosition.Y < 2 || 
-        cursorPosition.Y > Globals::HEIGHT - 5)
+    if (cursorPosition.X < 5 || 
+        cursorPosition.X > Globals::WIDTH - 4 || 
+        cursorPosition.Y < 3 || 
+        cursorPosition.Y > Globals::HEIGHT - 6)
       return false;
 
     if (cursorPosition.X == startCursorPosition.X && cursorPosition.Y == startCursorPosition.Y) return false;

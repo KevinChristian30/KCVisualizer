@@ -32,11 +32,16 @@ namespace SolvingAlgorithms {
       if (Maze[finish.y][finish.x]->visited) break;
 
       colorFrontiers(queue, "FOREGROUND_PURPLE", printOffsetX);
-      Sleep(10);
+      Sleep(15);
       
       UserInterface::Point::Point* current = queue.at(0);
+      queue.erase(queue.begin());
 
       current->visited = true;
+
+      Utility::setConsoleTextColor("FOREGROUND_GREEN");
+      Utility::setConsoleCursorPosition(start.x + printOffsetX, start.y + 2);
+      printf("%c", Globals::BLOCK_PIECE);
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
@@ -47,12 +52,11 @@ namespace SolvingAlgorithms {
             Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->visited == false
             ){
               Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->prev = Maze[current->position.x][current->position.y];
+              Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]->visited = true;
 
               queue.push_back(Maze[current->position.x + Globals::dirY[i]][current->position.y + Globals::dirX[i]]);
             }
       }
-
-      queue.erase(queue.begin());
     }
   }
 
@@ -70,6 +74,10 @@ namespace SolvingAlgorithms {
       Stack.erase(Stack.begin() + Stack.size() - 1);
 
       current->visited = true;
+
+      Utility::setConsoleTextColor("FOREGROUND_GREEN");
+      Utility::setConsoleCursorPosition(start.x + printOffsetX, start.y + 2);
+      printf("%c", Globals::BLOCK_PIECE);
 
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
@@ -120,6 +128,10 @@ namespace SolvingAlgorithms {
 
       current->visited = true;
 
+      Utility::setConsoleTextColor("FOREGROUND_GREEN");
+      Utility::setConsoleCursorPosition(start.x + printOffsetX, start.y + 2);
+      printf("%c", Globals::BLOCK_PIECE);
+
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       printf("%c", Globals::BLOCK_PIECE);
@@ -166,6 +178,10 @@ namespace SolvingAlgorithms {
       queue.erase(queue.begin() + currentIndex);
 
       current->visited = true;
+
+      Utility::setConsoleTextColor("FOREGROUND_GREEN");
+      Utility::setConsoleCursorPosition(start.x + printOffsetX, start.y + 2);
+      printf("%c", Globals::BLOCK_PIECE);
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
