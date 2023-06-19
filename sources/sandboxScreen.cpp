@@ -113,8 +113,8 @@ namespace SandboxScreen {
     Utility::UI::clearButtons();
 
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
-    Utility::setConsoleCursorPosition(X + 17, Y);
-    Utility::animateString("Path Can't be Found", 10);
+    Utility::setConsoleCursorPosition(X + 12, Y);
+    Utility::animateString("Path Can't be Found, Left Click to Continue", 10);
   }
 
   void displaySolveButtons() {
@@ -147,8 +147,11 @@ namespace SandboxScreen {
     if (cursorPosition.X < 4 || 
         cursorPosition.X > Globals::WIDTH - 3 || 
         cursorPosition.Y < 2 || 
-        cursorPosition.Y > Globals::HEIGHT - 5) 
+        cursorPosition.Y > Globals::HEIGHT - 5)
       return false;
+
+    if (cursorPosition.X == startCursorPosition.X && cursorPosition.Y == startCursorPosition.Y) return false;
+    if (cursorPosition.X == finishCursorPosition.X && cursorPosition.Y == finishCursorPosition.Y) return false;
 
     return true;
   }
