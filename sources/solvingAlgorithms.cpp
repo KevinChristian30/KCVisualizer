@@ -71,8 +71,6 @@ namespace SolvingAlgorithms {
 
       current->visited = true;
 
-      colorFrontiers(Stack, "FOREGROUND_PURPLE", printOffsetX);
-
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
       printf("%c", Globals::BLOCK_PIECE);

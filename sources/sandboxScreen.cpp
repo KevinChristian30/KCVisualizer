@@ -34,7 +34,6 @@ namespace SandboxScreen {
     for (int i = 0; i < H; i++) {
       Utility::setConsoleCursorPosition(3, 2 + i);
       for (int j = 0; j < W; j++) printf("%c", Maze[i][j]->symbol == '#' ? Globals::BLOCK_PIECE : ' ');
-      Sleep(10);
     }
   }
 
@@ -126,10 +125,13 @@ namespace SandboxScreen {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
-      displayPathFinding();
-      SolvingAlgorithms::BFS(Maze, start, finish, 4);
+      start.x += 1;
+      finish.x += 1;
 
-      SolvingAlgorithms::printPath(Maze, finish, 4);
+      displayPathFinding();
+      SolvingAlgorithms::BFS(Maze, start, finish, 3);
+
+      SolvingAlgorithms::printPath(Maze, finish, 3);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -139,10 +141,13 @@ namespace SandboxScreen {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
-      displayPathFinding();
-      SolvingAlgorithms::DFS(Maze, start, finish, 4);
+      start.x += 1;
+      finish.x += 1;
 
-      SolvingAlgorithms::printPath(Maze, finish, 4);
+      displayPathFinding();
+      SolvingAlgorithms::DFS(Maze, start, finish, 3);
+
+      SolvingAlgorithms::printPath(Maze, finish, 3);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -152,10 +157,13 @@ namespace SandboxScreen {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
-      displayPathFinding();
-      SolvingAlgorithms::dijkstra(Maze, start, finish, 4);
+      start.x += 1;
+      finish.x += 1;
 
-      SolvingAlgorithms::printPath(Maze, finish, 4);
+      displayPathFinding();
+      SolvingAlgorithms::dijkstra(Maze, start, finish, 3);
+
+      SolvingAlgorithms::printPath(Maze, finish, 3);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -165,10 +173,13 @@ namespace SandboxScreen {
       UserInterface::Position start = UserInterface::translateUICoordinateToMazePoint(startCursorPosition);
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
-      displayPathFinding();
-      SolvingAlgorithms::aStar(Maze, start, finish, 4);
+      start.x += 1;
+      finish.x += 1;
 
-      SolvingAlgorithms::printPath(Maze, finish, 4);
+      displayPathFinding();
+      SolvingAlgorithms::aStar(Maze, start, finish, 3);
+
+      SolvingAlgorithms::printPath(Maze, finish, 3);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
