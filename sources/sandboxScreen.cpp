@@ -127,9 +127,9 @@ namespace SandboxScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       displayPathFinding();
-      SolvingAlgorithms::BFS(Maze, start, finish);
+      SolvingAlgorithms::BFS(Maze, start, finish, 4);
 
-      SolvingAlgorithms::printPath(Maze, finish);
+      SolvingAlgorithms::printPath(Maze, finish, 4);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -140,9 +140,9 @@ namespace SandboxScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       displayPathFinding();
-      SolvingAlgorithms::DFS(Maze, start, finish);
+      SolvingAlgorithms::DFS(Maze, start, finish, 4);
 
-      SolvingAlgorithms::printPath(Maze, finish);
+      SolvingAlgorithms::printPath(Maze, finish, 4);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -153,9 +153,9 @@ namespace SandboxScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       displayPathFinding();
-      SolvingAlgorithms::dijkstra(Maze, start, finish);
+      SolvingAlgorithms::dijkstra(Maze, start, finish, 4);
 
-      SolvingAlgorithms::printPath(Maze, finish);
+      SolvingAlgorithms::printPath(Maze, finish, 4);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();
@@ -166,9 +166,9 @@ namespace SandboxScreen {
       UserInterface::Position finish = UserInterface::translateUICoordinateToMazePoint(finishCursorPosition);
 
       displayPathFinding();
-      SolvingAlgorithms::aStar(Maze, start, finish);
+      SolvingAlgorithms::aStar(Maze, start, finish, 4);
 
-      SolvingAlgorithms::printPath(Maze, finish);
+      SolvingAlgorithms::printPath(Maze, finish, 4);
       displayMazeSolved();
 
       Utility::UI::waitForLeftClick();

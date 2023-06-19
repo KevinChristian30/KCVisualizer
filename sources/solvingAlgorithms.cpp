@@ -11,17 +11,17 @@
 using namespace std;
 
 namespace SolvingAlgorithms {
-  void colorFrontiers(vector <UserInterface::Point::Point*> frontiers, const char* color) {
+  void colorFrontiers(vector <UserInterface::Point::Point*> frontiers, const char* color, int printOffsetX) {
     Utility::setConsoleTextColor(color);
     
     for (size_t i = 0; i < frontiers.size(); i++) {
-      Utility::setConsoleCursorPosition(frontiers[i]->position.y + 4, frontiers[i]->position.x + 2);
+      Utility::setConsoleCursorPosition(frontiers[i]->position.y + printOffsetX, frontiers[i]->position.x + 2);
     
       printf("%c", Globals::BLOCK_PIECE);
     }
   }
 
-  void BFS(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish) {
+  void BFS(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish, int printOffsetX) {
     for (int i = 0; i < 21; i++) for (int j = 0; j < 111; j++) 
       Maze[i][j]->visited = false;
     
@@ -31,7 +31,7 @@ namespace SolvingAlgorithms {
     while (queue.size() > 0) {
       if (Maze[finish.y][finish.x]->visited) break;
 
-      colorFrontiers(queue, "FOREGROUND_PURPLE");
+      colorFrontiers(queue, "FOREGROUND_PURPLE", printOffsetX);
       Sleep(10);
       
       UserInterface::Point::Point* current = queue.at(0);
@@ -39,7 +39,7 @@ namespace SolvingAlgorithms {
       current->visited = true;
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
-      Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+      Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       printf("%c", Globals::BLOCK_PIECE);
 
       for (int i = 0; i < 4; i++) {
@@ -56,7 +56,7 @@ namespace SolvingAlgorithms {
     }
   }
 
-  void DFS(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish) {
+  void DFS(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish, int printOffsetX) {
     for (int i = 0; i < 21; i++) for (int j = 0; j < 111; j++) 
       Maze[i][j]->visited = false;
 
@@ -71,9 +71,9 @@ namespace SolvingAlgorithms {
 
       current->visited = true;
 
-      colorFrontiers(Stack, "FOREGROUND_PURPLE");
+      colorFrontiers(Stack, "FOREGROUND_PURPLE", printOffsetX);
 
-      Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+      Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
       printf("%c", Globals::BLOCK_PIECE);
       Sleep(10);
@@ -90,13 +90,13 @@ namespace SolvingAlgorithms {
             }
       }
 
-      Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+      Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
       printf("%c", Globals::BLOCK_PIECE);
     }
   }
 
-  void dijkstra(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish) {
+  void dijkstra(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish, int printOffsetX) {
     for (int i = 0; i < 21; i++) for (int j = 0; j < 111; j++) 
       Maze[i][j]->visited = false;
     
@@ -107,7 +107,7 @@ namespace SolvingAlgorithms {
     while (queue.size() > 0) {
       if (Maze[finish.y][finish.x]->visited) break;
 
-      colorFrontiers(queue, "FOREGROUND_PURPLE");
+      colorFrontiers(queue, "FOREGROUND_PURPLE", printOffsetX);
       Sleep(10);
 
       UserInterface::Point::Point* current = queue.at(0);
@@ -123,7 +123,7 @@ namespace SolvingAlgorithms {
       current->visited = true;
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
-      Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+      Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       printf("%c", Globals::BLOCK_PIECE);
       
       for (int i = 0; i < 4; i++) {
@@ -140,7 +140,7 @@ namespace SolvingAlgorithms {
     }
   }
 
-  void aStar(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish) {
+  void aStar(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish, int printOffsetX) {
     for (int i = 0; i < 21; i++) for (int j = 0; j < 111; j++) 
       Maze[i][j]->visited = false;
     
@@ -151,7 +151,7 @@ namespace SolvingAlgorithms {
     while (queue.size() > 0){
       if (Maze[finish.y][finish.x]->visited) break;
 
-      colorFrontiers(queue, "FOREGROUND_PURPLE");
+      colorFrontiers(queue, "FOREGROUND_PURPLE", printOffsetX);
       Sleep(10);
 
       UserInterface::Point::Point* current = queue.at(0);
@@ -170,7 +170,7 @@ namespace SolvingAlgorithms {
       current->visited = true;
 
       Utility::setConsoleTextColor("FOREGROUND_BLUE");
-      Utility::setConsoleCursorPosition(current->position.y + 4, current->position.x + 2);
+      Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       printf("%c", Globals::BLOCK_PIECE);
       
       for (int i = 0; i < 4; i++) {
@@ -187,7 +187,7 @@ namespace SolvingAlgorithms {
     }
   }
 
-  void printPath(UserInterface::Point::Point* Maze[][112], UserInterface::Position finish) {
+  void printPath(UserInterface::Point::Point* Maze[][112], UserInterface::Position finish, int printOffsetX) {
     vector<UserInterface::Point::Point*> path;
 
     UserInterface::Point::Point* current = Maze[finish.y][finish.x];
@@ -196,12 +196,12 @@ namespace SolvingAlgorithms {
       current = current->prev;
     }
 
-    Utility::setConsoleCursorPosition(finish.x + 4, finish.y + 2);
+    Utility::setConsoleCursorPosition(finish.x + printOffsetX, finish.y + 2);
     Utility::setConsoleTextColor("FOREGROUND_RED");
     printf("%c", Globals::BLOCK_PIECE);
 
     for (int i = path.size() - 1; i > 0; i--){
-      Utility::setConsoleCursorPosition(path.at(i)->position.y + 4, path.at(i)->position.x + 2);
+      Utility::setConsoleCursorPosition(path.at(i)->position.y + printOffsetX, path.at(i)->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
       printf("%c", Globals::BLOCK_PIECE);
       Utility::setConsoleTextColor("FOREGROUND_WHITE");
