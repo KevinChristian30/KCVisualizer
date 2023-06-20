@@ -81,6 +81,8 @@ namespace SolvingAlgorithms {
       Utility::setConsoleCursorPosition(start.x + printOffsetX, start.y + 2);
       printf("%c", Globals::BLOCK_PIECE);
 
+      if (printOffsetX == 4) colorFrontiers(Stack, "FOREGROUND_PURPLE", printOffsetX);
+
       Utility::setConsoleCursorPosition(current->position.y + printOffsetX, current->position.x + 2);
       Utility::setConsoleTextColor("FOREGROUND_GREEN");
       printf("%c", Globals::BLOCK_PIECE);
@@ -223,59 +225,6 @@ namespace SolvingAlgorithms {
       Utility::setConsoleTextColor("FOREGROUND_WHITE");
 
       Sleep(10);
-    }
-  }
-
-  namespace TSP {
-    vector<UserInterface::Point::Point*> getNodes(UserInterface::Point::Point* Maze[][112]) {
-      vector<UserInterface::Point::Point*> points;
-
-      for (int i = 1; i < 20; i++) 
-        for (int j = 2; j < 109; j++) 
-          if (Maze[i][j]->symbol == '#') points.push_back(Maze[i][j]);
-
-      return points;
-    }
-
-    void drawLine(UserInterface::Point::Point* source, UserInterface::Point::Point* destination) {
-      int xGap = destination->position.y - source->position.y;
-      int yGap = destination->position.x - source->position.x;
-      double gradient = (double) yGap / xGap;
-
-      int xStep = xGap > 0 ? 1 : -1;
-      int yStep = yGap > 0 ? -1 : 1;
-
-      for (int x = source->position.y, y = 0; x != destination->position.y; x += xStep, y++) {
-        Utility::setConsoleCursorPosition(x + 3, source->position.x + 2 + ((int) (y * gradient)) * yStep);
-        printf("%c", Globals::BLOCK_PIECE);
-      
-        Sleep(10);
-      }
-    }
-
-    void greedyTSP(UserInterface::Point::Point* Maze[][112]) {
-      vector<UserInterface::Point::Point*> points = getNodes(Maze);
-
-      int startingIndex = rand() % points.size();
-      points.at(startingIndex)->visited = true;
-      UserInterface::Point::Point* current = points.at(startingIndex);
-
-      // Select greedily find the next best path for every node
-      int minimumCost = 999;
-      int nextMinimumNodeIndex = -1;
-    
-      // for (int i = 0; i < points.size(); i++) {
-      //   if (points.at(i) == current) continue;
-      //   if (points.at(i)->visited) continue;
-
-      //   Utility::setConsoleTextColor("FOREGROUND_RED");
-      //   drawLine(current, points.at(i));
-      // }
-
-      Utility::setConsoleTextColor("FOREGROUND_RED");
-      drawLine(points.at(1), points.at(0));
-
-      // Draw path from last node to first node
     }
   }
 }

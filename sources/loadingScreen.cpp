@@ -27,18 +27,17 @@ namespace LoadingScreen {
     Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 5, Globals::HEIGHT / 2);
     printf("Loading %d%%", progress = 100);
 
-    Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 15, Globals::HEIGHT / 2 + 1);
-    Utility::animateString("Left Click Anywhere to Continue", 15);
-  }
-
-  void waitForLeftClick() {
-    while (true) if (GetAsyncKeyState(VK_LBUTTON) & 1) break;
+    Utility::setConsoleCursorPosition(Globals::WIDTH / 2 - 14, Globals::HEIGHT / 2 + 1);
+    Utility::animateString("Double Click Anywhere to Continue", 15);
   }
 
   void show() {
     Utility::UI::animateOuterBorder(1);
     animateLoadingBar(20);
-    waitForLeftClick();
+    
+    Utility::UI::waitForDoubleClick();
+
+    Utility::clearScreen();
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
   }
 }

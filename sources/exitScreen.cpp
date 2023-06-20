@@ -26,7 +26,7 @@ namespace ExitScreen {
 
     Utility::setConsoleTextColor("FOREGROUND_WHITE");
     Utility::setConsoleCursorPosition(15, Globals::HEIGHT / 2 + 5);
-    Utility::animateString("Click Anywhere to Exit", 30);
+    Utility::animateString("Double Click Anywhere to Exit", 30);
   }
 
   void show() {
@@ -34,7 +34,7 @@ namespace ExitScreen {
     Utility::UI::animateOuterBorder(0);
     displayExitMessage();
 
-    Utility::UI::waitForLeftClick();
+    Utility::UI::waitForDoubleClick();
 
     exit(0);
   }

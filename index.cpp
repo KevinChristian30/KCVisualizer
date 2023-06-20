@@ -41,7 +41,7 @@ void initializeApp() {
 
 int main() {
   initializeApp();
-	// LoadingScreen::show();
+	LoadingScreen::show();
   MainMenuScreen::show();
 	return 0;
 }

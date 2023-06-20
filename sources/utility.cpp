@@ -158,6 +158,31 @@ namespace Utility {
         }
       }
     }
+  
+    COORD waitForDoubleClick() {
+      DWORD NUMBER_OF_EVENTS_READ;
+      INPUT_RECORD INPUT_BUFFER[Globals::INPUT_BUFFER_SIZE];
+
+      int counter;
+      while (true) {
+        counter = 0;
+
+        while (counter++ <= 100) {
+          ReadConsoleInput(Globals::INPUT_HANDLE, INPUT_BUFFER, Globals::INPUT_BUFFER_SIZE, &NUMBER_OF_EVENTS_READ);
+
+          for (int i = 0; i < NUMBER_OF_EVENTS_READ; i++) {
+            if (INPUT_BUFFER[i].EventType == MOUSE_EVENT) {
+              MOUSE_EVENT_RECORD event = INPUT_BUFFER[i].Event.MouseEvent;
+
+              if (event.dwEventFlags != DOUBLE_CLICK) continue;
+
+              COORD cursorPosition = { event.dwMousePosition.X, event.dwMousePosition.Y };
+              return cursorPosition;
+            }
+          }
+        }
+      }
+    }
   }
 }
 

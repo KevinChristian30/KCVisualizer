@@ -9,7 +9,6 @@
 #include "../headers/globals.h"
 #include "../headers/userInterface.h"
 #include "../headers/exitScreen.h"
-#include "../headers/tspScreen.h"
 #include "../headers/sortingScreen.h"
 #include "../headers/mazeSolvingScreen.h"
 #include "../headers/sandboxScreen.h"
@@ -24,7 +23,6 @@ namespace MainMenuScreen {
     "|_|\\_\\_____|   \\/   |_|___/\\__,_|\\__,_|_|_/___\\___|_|"
   };
 
-  UserInterface::Button btnTSP;
   UserInterface::Button btnSorting;
   UserInterface::Button btnMazeSolving;
   UserInterface::Button btnSandBox;
@@ -35,16 +33,13 @@ namespace MainMenuScreen {
     const short Y = 16;
     const short GAP = 6;
     
-    btnTSP.position = { X, Y };
-    strncpy(btnTSP.text, "TSP", 20);
-
-    btnSorting.position = { X + (22 * 1) + (GAP * 1), Y };
+    btnSorting.position = { X + (22 * 2) - 30, Y };
     strncpy(btnSorting.text, "Sorting", 20);
 
-    btnMazeSolving.position = { X + (22 * 2) + (GAP * 2) + 1, Y };
+    btnMazeSolving.position = { X + (22 * 2) - 2, Y };
     strncpy(btnMazeSolving.text, "Maze Solving", 20);
 
-    btnSandBox.position = { X + (22 * 3) + (GAP * 3) + 1, Y };
+    btnSandBox.position = { X + (22 * 2) + 26, Y };
     strncpy(btnSandBox.text, "SandBox", 20);
 
     btnExit.position = { X + (22 * 2) - 2, Y + 6};
@@ -114,7 +109,6 @@ namespace MainMenuScreen {
     Utility::UI::animateOuterBorder(0);
     animateTitle(delay);
 
-    UserInterface::renderButton(btnTSP);
     UserInterface::renderButton(btnSorting);
     UserInterface::renderButton(btnMazeSolving);
     UserInterface::renderButton(btnSandBox);
@@ -122,10 +116,7 @@ namespace MainMenuScreen {
   }
 
   bool handleClick(COORD cursorPosition) {
-    if (UserInterface::isCursorInButton(btnTSP, cursorPosition)){
-      TSPScreen::show();
-      return true;
-    } else if (UserInterface::isCursorInButton(btnSorting, cursorPosition)){
+    if (UserInterface::isCursorInButton(btnSorting, cursorPosition)){
       SortingScreen::show();
       return true;
     } else if (UserInterface::isCursorInButton(btnMazeSolving, cursorPosition)){

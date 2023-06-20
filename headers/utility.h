@@ -17,6 +17,8 @@ namespace Utility {
     void clearButtons();
 
     COORD waitForLeftClick();
+
+    COORD waitForDoubleClick();
   }
 }
 
