@@ -40,7 +40,7 @@ namespace TSPScreen {
   void initializeUIElements() {
     initializeMaze();
 
-    pointsToSelect = 5;
+    pointsToSelect = 2;
 
     const short X = 5;
     const short Y = 24;
@@ -95,7 +95,7 @@ namespace TSPScreen {
     if (UserInterface::isCursorInButton(btn1, cursorPosition)) {
       if (pointsToSelect > 0) return false;
 
-      SolvingAlgorithms::TSP(Maze);
+      SolvingAlgorithms::TSP::greedyTSP(Maze);
       
       Utility::UI::clearButtons();
       displayTSPSolved();
