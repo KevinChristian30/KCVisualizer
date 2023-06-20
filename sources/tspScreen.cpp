@@ -5,6 +5,7 @@
 #include <windows.h>
 
 #include "../headers/utility.h"
+#include "../headers/solvingAlgorithms.h"
 #include "../headers/userInterface.h"
 
 namespace TSPScreen {
@@ -61,6 +62,15 @@ namespace TSPScreen {
     printf("Select %d Points", pointsToSelect);
   }
 
+  void displayTSPSolved() {
+    const short X = 29;
+    const short Y = 25;
+
+    Utility::setConsoleTextColor("FOREGROUND_WHITE");
+    Utility::setConsoleCursorPosition(X + 1, Y);
+    Utility::animateString("Traveling Salesman Problem Solved! Left Click to Continue", 10);
+  }
+
   void displayUIElements() {
     Utility::UI::animateOuterBorder(0);
     Utility::UI::animateInnerBorder(0);
@@ -84,6 +94,12 @@ namespace TSPScreen {
   bool handleClick(COORD cursorPosition) {
     if (UserInterface::isCursorInButton(btn1, cursorPosition)) {
       if (pointsToSelect > 0) return false;
+
+      SolvingAlgorithms::TSP(Maze);
+      
+      Utility::UI::clearButtons();
+      displayTSPSolved();
+      Utility::UI::waitForLeftClick();
 
       return true;
     } else if (UserInterface::isCursorInButton(btn2, cursorPosition)) {

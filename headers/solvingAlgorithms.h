@@ -13,6 +13,8 @@ namespace SolvingAlgorithms {
   void aStar(UserInterface::Point::Point* Maze[][112], UserInterface::Position start, UserInterface::Position finish, int printOffsetX);
 
   void printPath(UserInterface::Point::Point* Maze[][112], UserInterface::Position finish, int printOffsetX);
+
+  void TSP(UserInterface::Point::Point* Maze[][112]);
 }
 
 #endif

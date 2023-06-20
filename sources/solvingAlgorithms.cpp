@@ -223,6 +223,10 @@ namespace SolvingAlgorithms {
       Sleep(10);
     }
   }
+
+  void TSP(UserInterface::Point::Point* Maze[][112]) {
+    
+  }
 }
 
 #endif
