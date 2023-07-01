@@ -40,7 +40,7 @@ namespace SortingScreen {
 
     void renderBar(Bar bar, int delay = 0) {
       for (auto i = 0; i < bar.height; i++) {
-        Sleep(delay);
+        if (i % 2 == 0) Sleep(delay);
         Utility::setConsoleCursorPosition(bar.xPos, bar.yPos - i);
         printf("%c", Globals::BLOCK_PIECE);
       }
