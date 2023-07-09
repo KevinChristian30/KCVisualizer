@@ -140,6 +140,9 @@ namespace SandboxScreen {
 
     if (Maze[cursorPosition.Y - 2][cursorPosition.X - 3]->symbol == '#') return false;
 
+    if (startCursorPosition.X == finishCursorPosition.X && startCursorPosition.Y == finishCursorPosition.Y)
+      return false;
+
     return true;
   }
 
